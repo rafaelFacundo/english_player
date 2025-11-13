@@ -1,0 +1,19 @@
+#header_container {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+#header_app_logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: white;
+}
+
+#app_name {
+    margin-left: 10px;
+}

@@ -1,0 +1,65 @@
+#footer_container {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border-top: 1px solid #3FFF4B;
+    padding: 5px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background-color: #161616;
+    transition: all ease 0.5s;
+    overflow: hidden;
+}
+
+.footer_expanded {
+    height: 40% !important;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+}
+
+#footer_content {
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    flex: 1;
+    padding: 50px;
+}
+
+
+#footer_container.footer_expanded #footer_content {
+    opacity: 1;
+}
+
+input {
+    width: 300px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+}
+
+.p-colorpicker-overlay-panel {
+    background-color: black;
+    min-width: auto !important;
+}
+
+#footer_selectDirectoryButton {
+    width: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+#footer_directoryButtonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#footer_directoryPath {
+    margin-left: 10px;
+}

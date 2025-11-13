@@ -1,0 +1,57 @@
+#videoOption_container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: fit-content;
+    padding: 10px;
+    height: 200px;
+    color: white;
+    cursor: pointer;
+}
+
+#videoOption_thumbContainer {
+    position: relative;
+    height: 100%;
+}
+
+#videoOption_image {
+    width: 400px;
+    height: 100%;
+    object-fit: fill;
+    
+}
+
+.videoOption_playButton {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#videoOption_progressBar {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 70%;
+    height: 4px;
+    background-color: #3FFF4B;
+}
+
+#videoOption_videoInfosContainer {
+    margin-left: 10px;
+    height: 100%;
+    font-size: 24px;
+}
+
+#videoOption_videoInfosContainer h3,h4  {
+    margin: 10px;
+}
+
+#videoOption_videoInfosContainer h3 {
+    margin-top: 0px;
+}
+
+.info {
+
+}

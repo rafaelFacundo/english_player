@@ -1,0 +1,118 @@
+#videoPlayer_container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+}
+
+#videoPlayer_back_button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#videoPlayer_video_player {
+    width: 100%;
+    height: auto;
+    
+    object-fit: cover;
+}
+
+#videoPlayer_videoAndControls_container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* flex-direction: column; */
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    overflow: hidden;
+}
+
+#videoPlayer_controls_and_progres_bar {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 200px;
+    background-color: rgba(128, 128, 128, 0.242);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#videoPlayer_controls_buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+#videoPlayer_progressBar {
+    height: 30px;
+    width: 100%;
+    background-color: #3FFF4B;
+    align-self: flex-start;
+}
+
+
+.videoPlayer_controlButton > svg {
+    width: 100px !important;
+    height: 100px !important;
+}
+
+#videoPlayer_subtitlesContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 50px;
+    font-size: 50px;
+}
+
+#videoPlayer_subtitlesContainer_firstLine {
+    display: flex;
+    align-items: center;
+}
+
+#videoPlayer_subtitlesContainer_secondLine {
+    display: flex;
+    align-items: center;
+}
+
+#videoPlayer_dictionaryResponse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 300px;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    padding: 25px;
+    gap: 8px;
+}
+
+#videoPlayer_dictionaryResponse * {
+    margin: 0px;
+}
+
+#videoPlayer_dictionaryResponse_buttonsContainer {
+    display: flex;
+    align-items: center;
+    
+}
+
+
