@@ -1,26 +1,38 @@
 import React, { useContext } from "react";
-import Header from "src/renderer/components/Header/index";
-import "./index.css";
-import Footer from "src/renderer/components/Footer";
 import VideoOption from "src/renderer/components/videoOption";
 import { AppContext } from "src/renderer/context/AppContext";
+
+import { Box, Typography } from "@mui/material";
+import SideBar from "src/renderer/components/sideBar";
 
 const Home: React.FC = () => {
   const { state } = useContext(AppContext);
   const listOfMovies = state.moviesData;
 
   return (
-    <div id="container">
-      <Header />
-      <main id="home_main">
-        {listOfMovies.length === 0 ? (
-          <h2>No movie was found</h2>
-        ) : (
-          listOfMovies.map((movie) => <VideoOption movie={movie} />)
-        )}
-      </main>
-      <Footer />
-    </div>
+    <Box
+      sx={(theme) => ({
+        backgroundColor: theme.palette.primary.dark,
+        backgroundImage: `linear-gradient(to top right, ${theme.palette.backgroundColor.main}, ${theme.palette.primary.dark})`,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+      })}
+    >
+      <SideBar />
+      <Box sx={{ paddingRight: "47px", paddingLeft: "47px" }}>
+        <Box sx={{ paddingTop: "45px" }}>
+          <Typography sx={{ color: "white", fontSize: "48px" }}>
+            Continue watching
+          </Typography>
+        </Box>
+        <Box sx={{ paddingTop: "45px" }}>
+          <Typography sx={{ color: "white", fontSize: "48px" }}>
+            All videos
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
