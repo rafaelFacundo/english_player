@@ -22,7 +22,7 @@ const VideoOption: React.FC<VideoOptionProps> = ({ movie }) => {
   return (
     <div id="videoOption_container" onClick={handleClick}>
       <div id="videoOption_thumbContainer">
-        <Button className={"videoOption_playButton"} icon={<PlayIcon />} />
+        <Button icon={<PlayIcon />} />
         <img id="videoOption_image" src={`image://${movie.thumbPath}`} />
       </div>
       <div id="videoOption_videoInfosContainer">
