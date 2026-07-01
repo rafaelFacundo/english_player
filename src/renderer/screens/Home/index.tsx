@@ -21,12 +21,43 @@ const Home: React.FC = () => {
       })}
     >
       <SideBar />
-      <Box sx={{ paddingRight: "47px", paddingLeft: "47px" }}>
-        <Box sx={{ paddingTop: "45px" }}>
+      <Box
+        sx={{
+          paddingRight: "47px",
+          paddingLeft: "47px",
+          display: "flex",
+          alignItems: "flex-start",
+          flex: 1,
+        }}
+      >
+        <Box
+          sx={{
+            paddingTop: "45px",
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            gap: "20px",
+          }}
+        >
           <Typography sx={{ color: "white", fontSize: "48px" }}>
             Continue watching
           </Typography>
-          <ContinueWatchingVideoOption />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: "15px",
+              overflow: "hidden",
+              width: "100%",
+            }}
+          >
+            <ContinueWatchingVideoOption />
+            <ContinueWatchingVideoOption />
+            <ContinueWatchingVideoOption />
+            <ContinueWatchingVideoOption />
+            <ContinueWatchingVideoOption />
+          </Box>
         </Box>
         <Box sx={{ paddingTop: "45px" }}>
           <Typography sx={{ color: "white", fontSize: "48px" }}>
