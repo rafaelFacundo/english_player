@@ -12,6 +12,8 @@ const ContinueWatchingVideoOption = () => {
         flexDirection: "column",
         width: "338px",
         height: "185px",
+        minWidth: "338px",
+        minHeight: "185px",
         borderRadius: "20px",
         overflow: "hidden",
       }}
