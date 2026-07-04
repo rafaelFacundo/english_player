@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import VideoOption from "src/renderer/components/videoOption";
 import { AppContext } from "src/renderer/context/AppContext";
 
@@ -14,21 +14,39 @@ const Home: React.FC = () => {
   const listOfMovies = state.moviesData;
   const listRef = useRef<HTMLDivElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
+  const [showCarrousselArrows, setShowCarrousselArrows] = useState(false);
 
   useEffect(() => {
+    const list = listRef.current;
+    const container = listContainerRef.current;
     const resizeObserver = new ResizeObserver(
       (entries: ResizeObserverEntry[]) => {
-        const entry1 = entries[0];
-        const entry2 = entries[1];
+        let moviesList: Element;
+        let moviesListContainer: Element;
+        entries.forEach((entry: ResizeObserverEntry) => {
+          if (entry.target === list) {
+            moviesList = entry.target;
+          } else {
+            moviesListContainer = entry.target;
+          }
+        });
+        if (!moviesList || !moviesListContainer) return;
+        const listRect = moviesList.getBoundingClientRect();
+        const containerRect = moviesListContainer.getBoundingClientRect();
+        if (listRect.width <= containerRect.width) {
+          setShowCarrousselArrows(false);
+        } else {
+          setShowCarrousselArrows(true);
+        }
       }
     );
 
-    resizeObserver.observe(listRef.current);
-    resizeObserver.observe(listContainerRef.current);
+    resizeObserver.observe(list);
+    resizeObserver.observe(container);
 
     return () => {
-      resizeObserver.unobserve(listRef.current);
-      resizeObserver.unobserve(listContainerRef.current);
+      resizeObserver.unobserve(list);
+      resizeObserver.unobserve(container);
     };
   }, []);
 
@@ -52,43 +70,61 @@ const Home: React.FC = () => {
           width: "5px",
         }}
       >
-        <Box
+        <Typography
           sx={{
-            paddingTop: "45px",
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            gap: "25px",
-            width: "100%",
+            color: "white",
+            fontSize: "48px",
+            marginLeft: "47px",
+            marginTop: "45px",
           }}
         >
-          <Typography
-            sx={{ color: "white", fontSize: "48px", marginLeft: "47px" }}
-          >
-            Continue watching
-          </Typography>
+          Continue watching
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            maxHeight: "fit-content",
+            position: "relative",
+            marginTop: "30px",
+          }}
+        >
+          <Button
+            icon={<LeftSideArrow />}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "0px",
+              "& svg": {
+                width: "62px",
+                height: "62px",
+              },
+              transform: "translateY(-50%)",
+              display: showCarrousselArrows ? "auto" : "none",
+              zIndex: 5,
+            }}
+            onClick={() => {
+              if (listContainerRef.current) {
+                listContainerRef.current.scrollBy({
+                  left: -400,
+                  behavior: "smooth",
+                });
+              }
+            }}
+          />
           <Box
             sx={{
               display: "flex",
-              overflow: "hidden",
+              overflowY: "hidden",
+              overflowX: "auto",
               width: "100%",
               position: "relative",
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
             }}
             ref={listContainerRef}
           >
-            <Button
-              icon={<LeftSideArrow />}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                lef: "0px",
-                "& svg": {
-                  width: "62px",
-                  height: "62px",
-                },
-                transform: "translateY(-50%)",
-              }}
-            />
             <Box
               sx={{
                 display: "flex",
@@ -96,10 +132,11 @@ const Home: React.FC = () => {
                 justifyContent: "flex-start",
                 gap: "25px",
                 flex: 1,
-                minWidth: "0px",
-                paddingLeft: "60px",
-                paddingRight: "60px",
-                maxWidth: "fit-content",
+                //minWidth: "0px",
+                paddingLeft: "70px",
+                paddingRight: "70px",
+                minWidth: "fit-content",
+                overflowX: "hidden",
               }}
               ref={listRef}
             >
@@ -107,17 +144,27 @@ const Home: React.FC = () => {
               <ContinueWatchingVideoOption />
               <ContinueWatchingVideoOption />
             </Box>
-            <Button
-              icon={<RightSideArrow />}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                right: "0px",
-                "& svg": { width: "62px", height: "62px" },
-                transform: "translateY(-50%)",
-              }}
-            />
           </Box>
+          <Button
+            icon={<RightSideArrow />}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              right: "0px",
+              "& svg": { width: "62px", height: "62px" },
+              transform: "translateY(-50%)",
+              display: showCarrousselArrows ? "auto" : "none",
+              zIndex: 5,
+            }}
+            onClick={() => {
+              if (listContainerRef.current) {
+                listContainerRef.current.scrollBy({
+                  left: 400,
+                  behavior: "smooth",
+                });
+              }
+            }}
+          />
         </Box>
         <Box sx={{ paddingTop: "45px" }}>
           <Typography sx={{ color: "white", fontSize: "48px" }}>
