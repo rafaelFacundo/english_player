@@ -14,7 +14,9 @@ const Home: React.FC = () => {
   const listOfMovies = state.moviesData;
   const listRef = useRef<HTMLDivElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
+  const allVideosListRef = useRef<HTMLDivElement>(null);
   const [showCarrousselArrows, setShowCarrousselArrows] = useState(false);
+  const [disableCardAnimation, setDisableCardAnimation] = useState(false);
 
   useEffect(() => {
     const list = listRef.current;
@@ -50,6 +52,26 @@ const Home: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const listRef = allVideosListRef.current;
+    const resizeObserver = new ResizeObserver(
+      (entries: ResizeObserverEntry[]) => {
+        const listRectWidth = entries[0].target.getBoundingClientRect().width;
+        if (listRectWidth <= 1400) {
+          setDisableCardAnimation(true);
+        } else {
+          setDisableCardAnimation(false);
+        }
+      }
+    );
+
+    resizeObserver.observe(listRef);
+
+    return () => {
+      resizeObserver.unobserve(listRef);
+    };
+  }, []);
+
   return (
     <Box
       sx={(theme) => ({
@@ -68,6 +90,10 @@ const Home: React.FC = () => {
           flexDirection: "column",
           flex: 1,
           width: "5px",
+          overflowY: "scroll",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         <Typography
@@ -132,7 +158,6 @@ const Home: React.FC = () => {
                 justifyContent: "flex-start",
                 gap: "25px",
                 flex: 1,
-                //minWidth: "0px",
                 paddingLeft: "70px",
                 paddingRight: "70px",
                 minWidth: "fit-content",
@@ -167,9 +192,44 @@ const Home: React.FC = () => {
           />
         </Box>
         <Box sx={{ paddingTop: "45px" }}>
-          <Typography sx={{ color: "white", fontSize: "48px" }}>
+          <Typography
+            sx={{
+              color: "white",
+              fontSize: "48px",
+              marginLeft: "47px",
+              marginTop: "45px",
+            }}
+          >
             All videos
           </Typography>
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              flexWrap: "wrap",
+              gap: "20px",
+              paddingLeft: "70px",
+              paddingRight: "70px",
+              paddingTop: "20px",
+              transition: "1s all ease-out",
+            }}
+            ref={allVideosListRef}
+          >
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+            <VideoOption disableAnimation={disableCardAnimation} />
+          </Box>
         </Box>
       </Box>
     </Box>
