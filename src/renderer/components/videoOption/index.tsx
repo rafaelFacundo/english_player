@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import Button from "src/renderer/components/Button";
+import Button from "src/renderer/components/IconButton";
 import PlayIcon from "src/renderer/components/icons/PlayIcon";
 import { Movie } from "src/types/general";
 import { AppContext } from "src/renderer/context/AppContext";

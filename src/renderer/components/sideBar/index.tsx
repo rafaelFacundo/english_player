@@ -3,7 +3,8 @@ import ApplicationLogo from "../icons/ApplicationLogo";
 import CardIcon from "../icons/cardIcon";
 import SettingsIcon from "../icons/SettingsIcon";
 import StatsIcon from "../icons/StatsIcon";
-import Button from "../Button";
+import Button from "../IconButton";
+import IconButton from "../IconButton";
 
 const SideBar = () => {
   const iconStyle: SxProps<Theme> = {
@@ -24,10 +25,10 @@ const SideBar = () => {
         gap: "41px",
       })}
     >
-      <Button icon={<ApplicationLogo />} sx={iconStyle} />
-      <Button icon={<CardIcon />} sx={iconStyle} />
-      <Button icon={<SettingsIcon />} sx={iconStyle} />
-      <Button icon={<StatsIcon />} sx={iconStyle} />
+      <IconButton icon={<ApplicationLogo />} sx={iconStyle} />
+      <IconButton icon={<CardIcon />} sx={iconStyle} />
+      <IconButton icon={<SettingsIcon />} sx={iconStyle} />
+      <IconButton icon={<StatsIcon />} sx={iconStyle} />
     </Box>
   );
 };

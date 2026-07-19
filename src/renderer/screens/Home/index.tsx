@@ -5,13 +5,17 @@ import { AppContext } from "src/renderer/context/AppContext";
 import { Box, Typography } from "@mui/material";
 import SideBar from "src/renderer/components/sideBar";
 import ContinueWatchingVideoOption from "src/renderer/components/ContinueWatchingVideoOption";
-import Button from "src/renderer/components/Button";
+import IconButton from "src/renderer/components/IconButton";
 import LeftSideArrow from "src/renderer/components/icons/LeftSideArrow";
 import RightSideArrow from "src/renderer/components/icons/RightSideArrow";
+import IconContiner from "src/renderer/components/IconContainer";
+import NoFilesIcon from "src/renderer/components/icons/NoFilesIcon";
+import Button from "src/renderer/components/Button";
 
 const Home: React.FC = () => {
   const { state } = useContext(AppContext);
   const listOfMovies = state.moviesData;
+  const moviesFolderPath = state.settingsData.moviesDirectoryPath;
   const listRef = useRef<HTMLDivElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
   const allVideosListRef = useRef<HTMLDivElement>(null);
@@ -21,55 +25,60 @@ const Home: React.FC = () => {
   useEffect(() => {
     const list = listRef.current;
     const container = listContainerRef.current;
-    const resizeObserver = new ResizeObserver(
-      (entries: ResizeObserverEntry[]) => {
-        let moviesList: Element;
-        let moviesListContainer: Element;
-        entries.forEach((entry: ResizeObserverEntry) => {
-          if (entry.target === list) {
-            moviesList = entry.target;
+    console.log(list, container);
+    if (list && container) {
+      const resizeObserver = new ResizeObserver(
+        (entries: ResizeObserverEntry[]) => {
+          let moviesList: Element;
+          let moviesListContainer: Element;
+          entries.forEach((entry: ResizeObserverEntry) => {
+            if (entry.target === list) {
+              moviesList = entry.target;
+            } else {
+              moviesListContainer = entry.target;
+            }
+          });
+          if (!moviesList || !moviesListContainer) return;
+          const listRect = moviesList.getBoundingClientRect();
+          const containerRect = moviesListContainer.getBoundingClientRect();
+          if (listRect.width <= containerRect.width) {
+            setShowCarrousselArrows(false);
           } else {
-            moviesListContainer = entry.target;
+            setShowCarrousselArrows(true);
           }
-        });
-        if (!moviesList || !moviesListContainer) return;
-        const listRect = moviesList.getBoundingClientRect();
-        const containerRect = moviesListContainer.getBoundingClientRect();
-        if (listRect.width <= containerRect.width) {
-          setShowCarrousselArrows(false);
-        } else {
-          setShowCarrousselArrows(true);
         }
-      }
-    );
+      );
 
-    resizeObserver.observe(list);
-    resizeObserver.observe(container);
+      resizeObserver.observe(list);
+      resizeObserver.observe(container);
 
-    return () => {
-      resizeObserver.unobserve(list);
-      resizeObserver.unobserve(container);
-    };
+      return () => {
+        resizeObserver.unobserve(list);
+        resizeObserver.unobserve(container);
+      };
+    }
   }, []);
 
   useEffect(() => {
     const listRef = allVideosListRef.current;
-    const resizeObserver = new ResizeObserver(
-      (entries: ResizeObserverEntry[]) => {
-        const listRectWidth = entries[0].target.getBoundingClientRect().width;
-        if (listRectWidth <= 1400) {
-          setDisableCardAnimation(true);
-        } else {
-          setDisableCardAnimation(false);
+    if (listRef) {
+      const resizeObserver = new ResizeObserver(
+        (entries: ResizeObserverEntry[]) => {
+          const listRectWidth = entries[0].target.getBoundingClientRect().width;
+          if (listRectWidth <= 1400) {
+            setDisableCardAnimation(true);
+          } else {
+            setDisableCardAnimation(false);
+          }
         }
-      }
-    );
+      );
 
-    resizeObserver.observe(listRef);
+      resizeObserver.observe(listRef);
 
-    return () => {
-      resizeObserver.unobserve(listRef);
-    };
+      return () => {
+        resizeObserver.unobserve(listRef);
+      };
+    }
   }, []);
 
   return (
@@ -83,115 +92,64 @@ const Home: React.FC = () => {
       })}
     >
       <SideBar />
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "flex-start",
-          flexDirection: "column",
-          flex: 1,
-          width: "5px",
-          overflowY: "scroll",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-        }}
-      >
-        <Typography
-          sx={{
-            color: "white",
-            fontSize: "48px",
-            marginLeft: "47px",
-            marginTop: "45px",
-          }}
-        >
-          Continue watching
-        </Typography>
+      {moviesFolderPath === "" || listOfMovies.length === 0 ? (
         <Box
           sx={{
             display: "flex",
-            width: "100%",
-            maxHeight: "fit-content",
-            position: "relative",
-            marginTop: "30px",
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+            flexDirection: "column",
+            width: "5px",
+            height: "100%",
           }}
         >
-          <Button
-            icon={<LeftSideArrow />}
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "0px",
-              "& svg": {
-                width: "62px",
-                height: "62px",
-              },
-              transform: "translateY(-50%)",
-              display: showCarrousselArrows ? "auto" : "none",
-              zIndex: 5,
-            }}
-            onClick={() => {
-              if (listContainerRef.current) {
-                listContainerRef.current.scrollBy({
-                  left: -400,
-                  behavior: "smooth",
-                });
-              }
-            }}
-          />
-          <Box
-            sx={{
-              display: "flex",
-              overflowY: "hidden",
-              overflowX: "auto",
-              width: "100%",
-              position: "relative",
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-            }}
-            ref={listContainerRef}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                gap: "25px",
-                flex: 1,
-                paddingLeft: "70px",
-                paddingRight: "70px",
-                minWidth: "fit-content",
-                overflowX: "hidden",
-              }}
-              ref={listRef}
-            >
-              <ContinueWatchingVideoOption />
-              <ContinueWatchingVideoOption />
-              <ContinueWatchingVideoOption />
-            </Box>
-          </Box>
-          <Button
-            icon={<RightSideArrow />}
-            sx={{
-              position: "absolute",
-              top: "50%",
-              right: "0px",
-              "& svg": { width: "62px", height: "62px" },
-              transform: "translateY(-50%)",
-              display: showCarrousselArrows ? "auto" : "none",
-              zIndex: 5,
-            }}
-            onClick={() => {
-              if (listContainerRef.current) {
-                listContainerRef.current.scrollBy({
-                  left: 400,
-                  behavior: "smooth",
-                });
-              }
-            }}
-          />
+          <IconContiner iconHeight={190} iconWidth={190}>
+            <NoFilesIcon />
+          </IconContiner>
+          {moviesFolderPath === "" ? (
+            <>
+              <Typography
+                sx={{
+                  color: "white",
+                  fontSize: "48px",
+                  marginBottom: "45px",
+                }}
+              >
+                There is no selected movies folder
+              </Typography>
+              <Button text="Select folder" />
+            </>
+          ) : (
+            <>
+              <Typography
+                sx={{
+                  color: "white",
+                  fontSize: "48px",
+                  marginBottom: "45px",
+                }}
+              >
+                There is no movie on the selected folder
+              </Typography>
+              <Button text="Refresh" marginBottom={28} />
+              <Button text="Select another folder" />
+            </>
+          )}
         </Box>
-        <Box sx={{ paddingTop: "45px" }}>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            flexDirection: "column",
+            flex: 1,
+            width: "5px",
+            overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
+        >
           <Typography
             sx={{
               color: "white",
@@ -200,38 +158,135 @@ const Home: React.FC = () => {
               marginTop: "45px",
             }}
           >
-            All videos
+            Continue watching
           </Typography>
           <Box
             sx={{
-              width: "100%",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
-              flexWrap: "wrap",
-              gap: "20px",
-              paddingLeft: "70px",
-              paddingRight: "70px",
-              paddingTop: "20px",
-              transition: "1s all ease-out",
+              width: "100%",
+              maxHeight: "fit-content",
+              position: "relative",
+              marginTop: "30px",
             }}
-            ref={allVideosListRef}
           >
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
-            <VideoOption disableAnimation={disableCardAnimation} />
+            <IconButton
+              icon={<LeftSideArrow />}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "0px",
+                "& svg": {
+                  width: "62px",
+                  height: "62px",
+                },
+                transform: "translateY(-50%)",
+                display: showCarrousselArrows ? "auto" : "none",
+                zIndex: 5,
+              }}
+              onClick={() => {
+                if (listContainerRef.current) {
+                  listContainerRef.current.scrollBy({
+                    left: -400,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                overflowY: "hidden",
+                overflowX: "auto",
+                width: "100%",
+                position: "relative",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
+              ref={listContainerRef}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  gap: "25px",
+                  flex: 1,
+                  paddingLeft: "70px",
+                  paddingRight: "70px",
+                  minWidth: "fit-content",
+                  overflowX: "hidden",
+                }}
+                ref={listRef}
+              >
+                <ContinueWatchingVideoOption />
+                <ContinueWatchingVideoOption />
+                <ContinueWatchingVideoOption />
+              </Box>
+            </Box>
+            <IconButton
+              icon={<RightSideArrow />}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                right: "0px",
+                "& svg": { width: "62px", height: "62px" },
+                transform: "translateY(-50%)",
+                display: showCarrousselArrows ? "auto" : "none",
+                zIndex: 5,
+              }}
+              onClick={() => {
+                if (listContainerRef.current) {
+                  listContainerRef.current.scrollBy({
+                    left: 400,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+            />
+          </Box>
+          <Box sx={{ paddingTop: "45px" }}>
+            <Typography
+              sx={{
+                color: "white",
+                fontSize: "48px",
+                marginLeft: "47px",
+                marginTop: "45px",
+              }}
+            >
+              All videos
+            </Typography>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+                gap: "20px",
+                paddingLeft: "70px",
+                paddingRight: "70px",
+                paddingTop: "20px",
+                transition: "1s all ease-out",
+              }}
+              ref={allVideosListRef}
+            >
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+              <VideoOption disableAnimation={disableCardAnimation} />
+            </Box>
           </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

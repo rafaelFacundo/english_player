@@ -4,7 +4,7 @@ import { AppContext } from "src/renderer/context/AppContext";
 import "./index.css";
 import PlayIcon from "src/renderer/components/icons/PlayIcon";
 import PauseIcon from "src/renderer/components/icons/PauseIcon";
-import Button from "src/renderer/components/Button";
+//import Button from "src/renderer/components/Button";
 import BackTenSecondsIcon from "src/renderer/components/icons/BackTenSeconds";
 import FowardTenSeconds from "src/renderer/components/icons/FowardTenSeconds";
 import AspectRatioButton from "src/renderer/components/icons/AspectRatioButton";
@@ -289,7 +289,7 @@ const VideoPlayer: React.FC = () => {
               />
 
               <div id="videoPlayer_controls_buttons">
-                <Button
+                {/* <Button
                   className="videoPlayer_controlButton"
                   icon={<BackIcon />}
                   onClick={() => {
@@ -315,7 +315,7 @@ const VideoPlayer: React.FC = () => {
                   className="videoPlayer_controlButton"
                   icon={<AspectRatioButton />}
                   onClick={() => handleAspectRatio()}
-                />
+                /> */}
               </div>
             </div>
           )}
@@ -341,7 +341,7 @@ const VideoPlayer: React.FC = () => {
             </>
           )}
           <div id="videoPlayer_dictionaryResponse_buttonsContainer">
-            <Button
+            {/*  <Button
               icon={<CancelAddIcon />}
               onClick={() => cleanTranslation()}
             />
@@ -350,7 +350,7 @@ const VideoPlayer: React.FC = () => {
               onClick={() =>
                 handleSaveWord(currentWord, dictionaryTranslation.meaning)
               }
-            />
+            /> */}
           </div>
         </div>
       )}
