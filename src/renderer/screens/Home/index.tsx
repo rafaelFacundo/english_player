@@ -13,7 +13,7 @@ import NoFilesIcon from "src/renderer/components/icons/NoFilesIcon";
 import Button from "src/renderer/components/Button";
 
 const Home: React.FC = () => {
-  const { state } = useContext(AppContext);
+  const { state, setMoviesFolder } = useContext(AppContext);
   const listOfMovies = state.moviesData;
   const moviesFolderPath = state.settingsData.moviesDirectoryPath;
   const listRef = useRef<HTMLDivElement>(null);
@@ -81,6 +81,11 @@ const Home: React.FC = () => {
     }
   }, []);
 
+  const handleSelectFolder = async () => {
+    const folderSelected = await window.directory.getFolderPath();
+    setMoviesFolder(folderSelected);
+  };
+
   return (
     <Box
       sx={(theme) => ({
@@ -118,7 +123,7 @@ const Home: React.FC = () => {
               >
                 There is no selected movies folder
               </Typography>
-              <Button text="Select folder" />
+              <Button text="Select folder" onClick={handleSelectFolder} />
             </>
           ) : (
             <>
@@ -132,7 +137,10 @@ const Home: React.FC = () => {
                 There is no movie on the selected folder
               </Typography>
               <Button text="Refresh" marginBottom={28} />
-              <Button text="Select another folder" />
+              <Button
+                text="Select another folder"
+                onClick={handleSelectFolder}
+              />
             </>
           )}
         </Box>
