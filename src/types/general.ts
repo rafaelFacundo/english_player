@@ -1,16 +1,25 @@
+export enum FileType {
+  Movie,
+  Subtitle,
+}
+
 export type MovieDuration = {
   hours: number;
   minutes: number;
   seconds: number;
 };
 
-export type Movie = {
-  id: number;
-  title: string;
+export type File = {
   path: string;
+  type: FileType;
+};
+
+export type Movie = File & {
+  title: string;
   subtitlesPath: string;
   duration: number;
   thumbPath: string;
+  watchedTime: number;
 };
 
 export type Settings = {
@@ -20,7 +29,9 @@ export type Settings = {
   moviesDirectoryPath: string;
 };
 
-export type Subtitle = {
+export type Subtitle = File;
+
+export type SubtitleLine = {
   endTime: number;
   firstLIne: string;
   secondline: string;
