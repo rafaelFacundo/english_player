@@ -12,6 +12,7 @@ import {
   register_GetFolderPath_And_SettingData_IpcHandlers,
 } from "./ipc/settings";
 import { verifyInitialSettingsFileAndMoviesData } from "./utils/general";
+import { closeDataBase, openDatabase } from "./db";
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -64,6 +65,8 @@ const createWindow = async () => {
 };
 
 app.on("ready", () => {
+  /* JUST TO TEST, GONNA SEE WHERE I CAN CALL THIS FUNCTION */
+  openDatabase();
   createWindow();
   protocol.handle("subtitle", handleSubtitleProtocol);
   protocol.handle("image", handleImageProtocol);
@@ -73,6 +76,9 @@ app.on("ready", () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+    /* JUST TO TEST, GONNA SEE WHERE I CAN CALL THIS FUNCTION */
+
+    closeDataBase();
   }
 });
 app.on("activate", () => {

@@ -8,3 +8,4 @@ export const moviesIndexFIlePath = path.join(
   moviesFoldersPath,
   "movies_index.json"
 );
+export const applicationDatabasePath = path.join(userData, "applicationDB.db");
