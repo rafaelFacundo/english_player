@@ -11,7 +11,7 @@ import {
   handleExportSettingsData,
   register_GetFolderPath_And_SettingData_IpcHandlers,
 } from "./ipc/settings";
-import { verifyInitialSettingsFileAndMoviesData } from "./utils/general";
+import { verifyInitialSettings } from "./utils/general";
 import { closeDataBase, openDatabase } from "./db";
 
 protocol.registerSchemesAsPrivileged([
@@ -43,7 +43,9 @@ if (started) {
 }
 
 const createWindow = async () => {
-  await verifyInitialSettingsFileAndMoviesData();
+  /* JUST TO TEST, GONNA SEE WHERE I CAN CALL THIS FUNCTION */
+  openDatabase();
+  await verifyInitialSettings();
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -65,8 +67,6 @@ const createWindow = async () => {
 };
 
 app.on("ready", () => {
-  /* JUST TO TEST, GONNA SEE WHERE I CAN CALL THIS FUNCTION */
-  openDatabase();
   createWindow();
   protocol.handle("subtitle", handleSubtitleProtocol);
   protocol.handle("image", handleImageProtocol);

@@ -29,16 +29,15 @@ export type Movie = File & {
 };
 
 export type Settings = {
-  subtitleColor: string;
-  subtitleBackgroundColor: string;
-  deckName: string;
-  moviesDirectoryPath: string;
+  subtitle_color: string;
+  subtitle_background_color: string;
+  movies_directory_path: string | null;
 };
 
 export type SettingskeyValue = {
   id: number;
-  key: string;
-  value: string;
+  key: keyof Settings;
+  value: string | null;
 };
 
 export type Subtitle = File;

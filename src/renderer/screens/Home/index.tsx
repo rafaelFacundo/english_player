@@ -15,7 +15,7 @@ import Button from "src/renderer/components/Button";
 const Home: React.FC = () => {
   const { state, setMoviesFolder } = useContext(AppContext);
   const listOfMovies = state.moviesData;
-  const moviesFolderPath = state.settingsData.moviesDirectoryPath;
+  const moviesFolderPath = state.settingsData.movies_directory_path;
   const listRef = useRef<HTMLDivElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
   const allVideosListRef = useRef<HTMLDivElement>(null);
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
           <IconContiner iconHeight={190} iconWidth={190}>
             <NoFilesIcon />
           </IconContiner>
-          {moviesFolderPath === "" ? (
+          {moviesFolderPath === null ? (
             <>
               <Typography
                 sx={{

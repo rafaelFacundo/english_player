@@ -13,13 +13,14 @@ export const openDatabase = (): void => {
       CREATE TABLE IF NOT EXISTS settings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         key TEXT UNIQUE,
-        value TEXT NOT NULL
+        value TEXT
       );
 
       CREATE TABLE IF NOT EXISTS folders (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         path TEXT UNIQUE,
-        last_scan TIMESTAMP NOT NULL
+        last_scan TIMESTAMP NOT NULL,
+        is_active BOOLEAN NOT NULL DEFAULT 0
       );
 
       CREATE TABLE IF NOT EXISTS movies (
@@ -167,10 +168,36 @@ export const insertNewFolder = (folder: Folder) => {
   }
 };
 
+export const insertKeySetting = (
+  settings: { key: string; value: string }[]
+) => {
+  dataBase.exec("BEGIN TRANSACTION;");
+  const result = [];
+  try {
+    const insertQuery = dataBase.prepare(`
+      INSERT INTO settings (key, value) 
+      VALUES (
+        ?,
+        ?
+      );
+    `);
+    for (const setting of settings) {
+      const insertResult = insertQuery.run(setting.key, setting.value);
+      result.push(insertResult);
+    }
+    dataBase.exec("COMMIT;");
+  } catch (error) {
+    console.log("ERROR WHILE TRYING TO INSERT NEW SETTING KEY");
+    dataBase.exec("ROLLBACK;");
+    console.log(error);
+  }
+  return result;
+};
+
 export const getMovies = (): Movie[] | undefined => {
   try {
-    const setelectQuery = dataBase.prepare("SELECT * FROM movies;");
-    const result = setelectQuery.all() as unknown[] as Movie[];
+    const selectQuery = dataBase.prepare("SELECT * FROM movies;");
+    const result = selectQuery.all() as unknown[] as Movie[];
     return result;
   } catch (error) {
     console.log("ERRORS WHILE TRYING TO GET MOVIES");
@@ -180,8 +207,8 @@ export const getMovies = (): Movie[] | undefined => {
 
 export const getSubtitles = (): Subtitle[] | undefined => {
   try {
-    const setelectQuery = dataBase.prepare("SELECT * FROM subtitles;");
-    const result = setelectQuery.all() as unknown[] as Subtitle[];
+    const selectQuery = dataBase.prepare("SELECT * FROM subtitles;");
+    const result = selectQuery.all() as unknown[] as Subtitle[];
     return result;
   } catch (error) {
     console.log("ERROR WHILE TRYING TO GET SUBTITLES");
@@ -191,8 +218,8 @@ export const getSubtitles = (): Subtitle[] | undefined => {
 
 export const getSettings = (): SettingskeyValue[] | undefined => {
   try {
-    const setelectQuery = dataBase.prepare("SELECT * FROM settings;");
-    const result = setelectQuery.all() as unknown[] as SettingskeyValue[];
+    const selectQuery = dataBase.prepare("SELECT * FROM settings;");
+    const result = selectQuery.all() as unknown[] as SettingskeyValue[];
     return result;
   } catch (error) {
     console.log("ERROR WHILE TRYING TO GET SETTINGS");
@@ -202,8 +229,8 @@ export const getSettings = (): SettingskeyValue[] | undefined => {
 
 export const getFolders = (): Folder[] | undefined => {
   try {
-    const setelectQuery = dataBase.prepare("SELECT * FROM folders;");
-    const result = setelectQuery.all() as unknown[] as Folder[];
+    const selectQuery = dataBase.prepare("SELECT * FROM folders;");
+    const result = selectQuery.all() as unknown[] as Folder[];
     return result;
   } catch (error) {
     console.log("ERROR WHILE TRYING TO GET FOLDERS");

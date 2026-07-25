@@ -27,10 +27,9 @@ type AppProviderPropsType = {
 const initialState: AppState = {
   moviesData: [],
   settingsData: {
-    subtitleColor: "FFFF00",
-    subtitleBackgroundColor: "000000",
-    deckName: "",
-    moviesDirectoryPath: "",
+    subtitle_color: "FFFF00",
+    subtitle_background_color: "000000",
+    movies_directory_path: "",
   },
   currentMovieBeingWatched: -1,
 };
@@ -47,6 +46,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
   };
 
   const setSettings = (newSettings: Settings) => {
+    console.log("asdas", newSettings);
     const newState = { ...state };
     newState.settingsData = newSettings;
     setState(newState);
@@ -56,7 +56,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
     const newState = { ...state };
     if (path !== "") {
       console.log("enter");
-      newState.settingsData.moviesDirectoryPath = path;
+      newState.settingsData.movies_directory_path = path;
     }
     setState(newState);
     window.settings.saveSettingsData(newState.settingsData);
@@ -64,19 +64,18 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
 
   const setSubtitleColor = (color: string) => {
     const newState = { ...state };
-    newState.settingsData.subtitleColor = color;
+    newState.settingsData.subtitle_color = color;
     setState(newState);
   };
 
   const setSubtitleBackgroundColor = (backgroundColor: string) => {
     const newState = { ...state };
-    newState.settingsData.subtitleBackgroundColor = backgroundColor;
+    newState.settingsData.subtitle_background_color = backgroundColor;
     setState(newState);
   };
 
   const setDeckName = (deckName: string) => {
     const newState = { ...state };
-    newState.settingsData.deckName = deckName;
     setState(newState);
     window.settings.saveSettingsData(newState.settingsData);
   };
@@ -88,10 +87,13 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (state.settingsData.moviesDirectoryPath !== "") {
-      window.movies.seachForMovies(state.settingsData.moviesDirectoryPath);
+    if (
+      state.settingsData.movies_directory_path !== "" &&
+      state.settingsData.movies_directory_path !== null
+    ) {
+      window.movies.seachForMovies(state.settingsData.movies_directory_path);
     }
-  }, [state.settingsData.moviesDirectoryPath]);
+  }, [state.settingsData.movies_directory_path]);
 
   useEffect(() => {
     window.settings.getSettingsData();

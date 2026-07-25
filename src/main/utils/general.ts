@@ -7,9 +7,25 @@ import {
 } from "src/main/utils/paths";
 import { configFileInitialValue } from "src/main/filesInitialValue/config";
 import { createAfile, createDirSync } from "src/main/utils/files";
+import { getSettings, insertKeySetting } from "../db";
 
-export const verifyInitialSettingsFileAndMoviesData = async () => {
-  /* if (!fs.existsSync(applicationMoviesThumbsPath)) {
+export const verifyInitialSettings = async () => {
+  try {
+    /* if (!fs.existsSync(applicationMoviesThumbsPath)) {
     createDirSync(applicationMoviesThumbsPath);
-  } */
+    } */
+    const settingsList = getSettings();
+    if (!settingsList) {
+      console.log("THERE IS NO SETTINGS");
+    } else if (settingsList.length === 0) {
+      insertKeySetting([
+        { key: "subtitle_color", value: "FFFFe0" },
+        { key: "subtitle_background_color", value: "000000" },
+        { key: "movies_directory_path", value: null },
+      ]);
+    }
+  } catch (error) {
+    console.log("ERROR WHILE CREATING INITIAL RESOURCES");
+    console.log(error);
+  }
 };

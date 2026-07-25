@@ -4,6 +4,7 @@ import { createAfile } from "src/main/utils/files";
 import { configJsonFilePath } from "src/main/utils/paths";
 import path from "node:path";
 import fs from "node:fs";
+import { getSettings } from "../db";
 
 export const handleExportSettingsData = async (
   event: IpcMainEvent,
@@ -24,13 +25,19 @@ export const handleExportSettingsData = async (
 };
 
 export const getConfig = (event: IpcMainEvent, _: any) => {
-  const userData = app.getPath("userData");
-  const configJsonFilePath = path.join(userData, "config.json");
+  const settingsObject: Settings = {
+    movies_directory_path: "",
+    subtitle_background_color: "",
+    subtitle_color: "",
+  };
 
-  const file = fs.readFileSync(configJsonFilePath, "utf-8");
-  const jsonObject = JSON.parse(file);
+  const result = getSettings();
+  result.forEach((item) => {
+    const key = item.key;
+    settingsObject[key] = item.value;
+  });
 
-  event.reply("config_data_loaded", jsonObject);
+  event.reply("config_data_loaded", settingsObject);
 };
 
 export const register_GetFolderPath_And_SettingData_IpcHandlers = (
