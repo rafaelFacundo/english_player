@@ -35,6 +35,12 @@ export type Settings = {
   moviesDirectoryPath: string;
 };
 
+export type SettingskeyValue = {
+  id: number;
+  key: string;
+  value: string;
+};
+
 export type Subtitle = File;
 
 export type SubtitleLine = {

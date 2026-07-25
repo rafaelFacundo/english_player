@@ -14,7 +14,12 @@ import {
   moviesFoldersPath,
   moviesIndexFIlePath,
 } from "src/main/utils/paths";
-import { insertNewFolder, insertNewMovies, insertNewSubtitles } from "../db";
+import {
+  getMovies,
+  insertNewFolder,
+  insertNewMovies,
+  insertNewSubtitles,
+} from "../db";
 
 const getFileExtension = (data: Dirent): string => {
   return path.extname(path.join(data.parentPath, data.name));

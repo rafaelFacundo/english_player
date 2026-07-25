@@ -1,6 +1,6 @@
 import sqlite3, { SQLInputValue } from "node:sqlite";
 import { applicationDatabasePath } from "../utils/paths";
-import { Folder, Movie, Subtitle } from "src/types/general";
+import { Folder, Movie, SettingskeyValue, Subtitle } from "src/types/general";
 
 let dataBase: sqlite3.DatabaseSync;
 
@@ -167,13 +167,46 @@ export const insertNewFolder = (folder: Folder) => {
   }
 };
 
-export const getMovies = () => {
+export const getMovies = (): Movie[] | undefined => {
   try {
     const setelectQuery = dataBase.prepare("SELECT * FROM movies;");
-    const result = setelectQuery.all();
-    console.log("query result", result);
+    const result = setelectQuery.all() as unknown[] as Movie[];
+    return result;
   } catch (error) {
     console.log("ERRORS WHILE TRYING TO GET MOVIES");
+    console.log(error);
+  }
+};
+
+export const getSubtitles = (): Subtitle[] | undefined => {
+  try {
+    const setelectQuery = dataBase.prepare("SELECT * FROM subtitles;");
+    const result = setelectQuery.all() as unknown[] as Subtitle[];
+    return result;
+  } catch (error) {
+    console.log("ERROR WHILE TRYING TO GET SUBTITLES");
+    console.log(error);
+  }
+};
+
+export const getSettings = (): SettingskeyValue[] | undefined => {
+  try {
+    const setelectQuery = dataBase.prepare("SELECT * FROM settings;");
+    const result = setelectQuery.all() as unknown[] as SettingskeyValue[];
+    return result;
+  } catch (error) {
+    console.log("ERROR WHILE TRYING TO GET SETTINGS");
+    console.log(error);
+  }
+};
+
+export const getFolders = (): Folder[] | undefined => {
+  try {
+    const setelectQuery = dataBase.prepare("SELECT * FROM folders;");
+    const result = setelectQuery.all() as unknown[] as Folder[];
+    return result;
+  } catch (error) {
+    console.log("ERROR WHILE TRYING TO GET FOLDERS");
     console.log(error);
   }
 };
