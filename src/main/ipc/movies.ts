@@ -9,74 +9,127 @@ import {
   readFileAsync,
 } from "src/main/utils/files";
 import { execSync } from "node:child_process";
-import { moviesFoldersPath, moviesIndexFIlePath } from "src/main/utils/paths";
+import {
+  applicationMoviesThumbsPath,
+  moviesFoldersPath,
+  moviesIndexFIlePath,
+} from "src/main/utils/paths";
+import { insertNewFolder, insertNewMovies, insertNewSubtitles } from "../db";
 
 const getFileExtension = (data: Dirent): string => {
   return path.extname(path.join(data.parentPath, data.name));
 };
 
-const getMovieDuration = (data: Dirent): number => {
-  /* const videoPath = path.join(data.parentPath, data.name);
-  const stdout = execSync(
-    `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${videoPath}`
-  ).toString(); */
-  return Math.round(Number(1)) / 60;
+const getMovieStats = (
+  moviePath: string
+): { size: number; lastModified: Date; lasOpened: Date } | undefined => {
+  let result:
+    | { size: number; lastModified: Date; lasOpened: Date }
+    | undefined = undefined;
+  fs.stat(moviePath, (err, stats) => {
+    if (err) {
+      console.log("ERROR WHILE GETTING MOVIE STATS");
+      return;
+    }
+    result = {
+      size: stats.size,
+      lastModified: stats.mtime,
+      lasOpened: stats.atime,
+    };
+  });
+  return result;
 };
 
-const getMovieThumb = (data: Dirent, newPath: string): string => {
-  /* const thumbsPath = path.join(newPath, "thumbs");
-  const videoPath = path.join(data.parentPath, data.name);
-  const videoNameHash = crypto.hash("sha256", data.name);
-  const thumbImagePath = `${thumbsPath}/${videoNameHash}.jpg`;
-  execSync(
-    `ffmpeg -v error -ss 00:10:10 -i ${videoPath} -frames:v 1 -q:v 2 ${thumbImagePath}`
-  ); */
-  return "thumbImagePath";
+const getMovieDuration = (videoPath: string): number => {
+  try {
+    const stdout = execSync(
+      `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 ${videoPath}`
+    ).toString();
+    return Math.round(Number(stdout)) / 60;
+  } catch (error) {
+    console.log(`ERROR WHILE TRY TO GET DURATION FROM ${videoPath}`);
+    console.log(error);
+  }
 };
 
-const getSubtitleInfo = (item: fs.Dirent<string>): Subtitle => {
+const getMovieThumb = (videoPath: string, videoName: string): string => {
+  try {
+    const videoNameHash = crypto.hash("sha256", videoName);
+    const thumbImagePath = `${applicationMoviesThumbsPath}/${videoNameHash}.jpg`;
+    execSync(
+      `ffmpeg -v error -ss 00:10:10 -i ${videoPath} -frames:v 1 -q:v 2 ${thumbImagePath}`
+    );
+    return thumbImagePath;
+  } catch (error) {
+    console.log(`ERROR WHILE TRYING TO EXTRACT THUMB FROM ${videoPath}`);
+    console.log(error);
+  }
+};
+
+const getSubtitleInfo = (
+  item: fs.Dirent<string>,
+  folderId: number | bigint
+): Subtitle => {
   const subtitleFile: Subtitle = {
     path: path.join(item.parentPath, item.name),
+    folderId: folderId,
     type: FileType.Subtitle,
   };
   return subtitleFile;
 };
 
-const getMovieInfo = (item: fs.Dirent<string>, newPath: string): Movie => {
+const getMovieInfo = (
+  item: fs.Dirent<string>,
+  folderId: number | bigint
+): Movie => {
+  const moviePath = path.join(item.parentPath, item.name);
+  /* This object is going to be used to insert the movie on the dataBase */
+  /*
+    to insert, we don't need id, and subtitlesPath, therefore 
+    i don't add these keys here 
+  */
   const movie: Movie = {
-    duration: 0,
-    subtitlesPath: "",
-    thumbPath: "",
     title: "",
-    watchedTime: 0,
+    duration: 0,
+    watched: 0,
+    lastOpened: new Date(),
+    numberOfCards: 0,
+    lastModified: new Date(),
+    size: 0,
+    folderId: folderId,
+    thumbPath: "",
+    path: moviePath,
     type: FileType.Movie,
-    path: path.join(item.parentPath, item.name),
   };
-  movie.thumbPath = getMovieThumb(item, newPath);
-  movie.duration = getMovieDuration(item);
+  movie.thumbPath = getMovieThumb(moviePath, item.name);
+  movie.duration = getMovieDuration(moviePath);
+  const movieStats = getMovieStats(moviePath);
+  if (movieStats) {
+    movie.size = movieStats.size;
+    movie.lastModified = movieStats.lastModified;
+    movie.lastOpened = movieStats.lasOpened;
+  }
   movie.title = item.name;
   return movie;
 };
 
 const handleStackItem = (
   item: fs.Dirent<string>,
-  newPath: string
+  folderId: number | bigint
 ): File | undefined => {
   const fileExtension = getFileExtension(item);
   if (fileExtension === ".mp4") {
-    return getMovieInfo(item, newPath);
+    return getMovieInfo(item, folderId);
   } else if (fileExtension === ".srt") {
-    return getSubtitleInfo(item);
+    return getSubtitleInfo(item, folderId);
   }
 };
 
-const seekFiles = (pathToSearch: string, newPath: string): File[] => {
+const seekFiles = (pathToSearch: string, folderId: number | bigint): File[] => {
   let files: File[] = [];
   const filesStack: fs.Dirent<string>[] = fs.readdirSync(pathToSearch, {
     withFileTypes: true,
   });
-  //console.log("FILESa: ", filesStack[filesStack.length - 1]);
-
   let stackItem: fs.Dirent<string>;
   while (filesStack.length > 0) {
     stackItem = filesStack[filesStack.length - 1];
@@ -88,39 +141,10 @@ const seekFiles = (pathToSearch: string, newPath: string): File[] => {
       filesStack.pop();
       filesStack.push(...newDirectoryFiles);
     } else {
-      files.push(handleStackItem(stackItem, newPath));
+      files.push(handleStackItem(stackItem, folderId));
       filesStack.pop();
     }
   }
-
-  console.log("files array final result");
-  console.log(files);
-
-  /* for (const data of dirFiles) {
-    if (data.isDirectory()) {
-      const listResult = seekFiles(
-        path.join(pathToSearch, data.name),
-        currentId,
-        newPath
-      );
-      movies = movies.concat(listResult);
-      currentId += listResult.length;
-    } else {
-      const FileExtension = getFileExtension(data);
-      if (FileExtension === ".mp4") {
-        movieT.id = currentId;
-        movieT.title = data.name;
-        movieT.path = path.join(data.parentPath, data.name);
-        movieT.duration = getMovieDuration(data);
-        movieT.thumbPath = extractMovieThumb(data, newPath, currentId);
-      } else if (FileExtension === ".srt") {
-        movieT.subtitlesPath = path.join(data.parentPath, data.name);
-      }
-    }
-  } */
-  /* if (movieT.id !== -1) {
-    movies.push(movieT);
-  } */
   return files;
 };
 
@@ -128,65 +152,22 @@ export const handleSearchForMovies = async (
   event: IpcMainEvent,
   folderPath: string
 ) => {
-  const pathHash = crypto.hash("sha256", folderPath);
-  const newMovieFolderPath = path.join(moviesFoldersPath, pathHash);
-
-  seekFiles(folderPath, newMovieFolderPath);
-  return;
-  //const pathHash = crypto.hash("sha256", folderPath);
-  const moviesIndexFile = JSON.parse(
-    fs.readFileSync(moviesIndexFIlePath, {
-      encoding: "utf8",
-      flag: "r",
-    })
-  );
-  if (!moviesIndexFile[pathHash]) {
-    let movies: Movie[] = [];
-    /*
-      creating a movies folder, in each movie folder (that is identified by a
-      hash generated from the path) there is a json(movies.json) with the path to 
-      each file(thumbs, videos, and subtitles) and a folder with the thumbs from the videos
-    */
-
-    //adding the new folder path to the general folders file
-    moviesIndexFile[pathHash] = folderPath;
-    //creating the paths of the hash folder, thumbs and the movies.json file
-    const newMovieFolderPath = path.join(moviesFoldersPath, pathHash);
-    const thumbsPath = path.join(newMovieFolderPath, "thumbs");
-    const moviesJsonFilePath = path.join(newMovieFolderPath, "movies.json");
-    createDirSync(newMovieFolderPath);
-    createDirSync(thumbsPath);
-    //updating the general folders file
-    await createAfile(
-      moviesIndexFIlePath,
-      JSON.stringify(moviesIndexFile),
-      () => {},
-      () => {}
-    );
-    //DFS on the selected movies folder
-    //movies = movies.concat(seekFiles(folderPath, 0, newMovieFolderPath));
-    //writing the movies.json on the new hash folder
-    createAfile(
-      moviesJsonFilePath,
-      JSON.stringify(movies),
-      () => {
-        console.log("movies savved on ", moviesJsonFilePath);
-        event.reply("on-get-movies", movies);
-      },
-      () => {
-        console.log("can not create movies.json file");
-      }
-    );
-  } else {
-    readFileAsync(
-      path.join(moviesFoldersPath, pathHash, "movies.json"),
-      (data: any) => {
-        const moviesFile = JSON.parse(data);
-        event.reply("on-get-movies", moviesFile);
-      },
-      () => {}
-    );
-  }
+  const newFolderId = insertNewFolder({
+    path: folderPath,
+    lastScan: new Date(),
+  });
+  const files = seekFiles(folderPath, newFolderId);
+  const movies: Movie[] = [];
+  const subtitles: Subtitle[] = [];
+  files.forEach((file) => {
+    if (file.type === FileType.Movie) {
+      movies.push(file as Movie);
+    } else {
+      subtitles.push(file as Subtitle);
+    }
+  });
+  insertNewMovies(movies);
+  insertNewSubtitles(subtitles);
 };
 
 export const handleRefreshMoviesFolder = async (

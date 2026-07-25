@@ -11,15 +11,21 @@ export type MovieDuration = {
 
 export type File = {
   path: string;
-  type: FileType;
+  type?: FileType;
+  folderId: number | bigint;
 };
 
 export type Movie = File & {
+  id?: number;
   title: string;
-  subtitlesPath: string;
   duration: number;
-  thumbPath: string;
-  watchedTime: number;
+  watched: number;
+  lastOpened: Date;
+  numberOfCards: number;
+  lastModified: Date;
+  size: number;
+  subtitlesPath?: string[];
+  thumbPath?: string;
 };
 
 export type Settings = {
@@ -48,4 +54,10 @@ export type Card = {
   front: string;
   back: string;
   deckName: string;
+};
+
+export type Folder = {
+  id?: number;
+  path: string;
+  lastScan: Date;
 };
