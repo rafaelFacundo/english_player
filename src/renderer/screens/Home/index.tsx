@@ -84,9 +84,7 @@ const Home: React.FC = () => {
   const handleSelectFolder = async () => {
     const folderSelected = await window.directory.getFolderPath();
     // just for test, after the implementation this line will be removed
-    window.movies.seachForMovies(folderSelected);
-
-    //setMoviesFolder(folderSelected);
+    setMoviesFolder(folderSelected);
   };
 
   return (

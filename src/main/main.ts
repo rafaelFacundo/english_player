@@ -77,7 +77,6 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
     /* JUST TO TEST, GONNA SEE WHERE I CAN CALL THIS FUNCTION */
-
     closeDataBase();
   }
 });

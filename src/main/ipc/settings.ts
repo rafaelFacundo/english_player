@@ -4,24 +4,13 @@ import { createAfile } from "src/main/utils/files";
 import { configJsonFilePath } from "src/main/utils/paths";
 import path from "node:path";
 import fs from "node:fs";
-import { getSettings } from "../db";
+import { getSettings, updateSettingsKey } from "../db";
 
 export const handleExportSettingsData = async (
   event: IpcMainEvent,
-  data: Settings
+  data: { key: string; value: string }
 ) => {
-  const fileContent = JSON.stringify(data);
-  console.log("alskdjalskdjalskdjlk", data);
-  await createAfile(
-    configJsonFilePath,
-    fileContent,
-    () => {
-      console.log("FILE CREATED at", configJsonFilePath);
-    },
-    () => {
-      console.log("FILE DID NOT CREAT");
-    }
-  );
+  updateSettingsKey(data.key, data.value);
 };
 
 export const getConfig = (event: IpcMainEvent, _: any) => {

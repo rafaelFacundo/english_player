@@ -237,3 +237,17 @@ export const getFolders = (): Folder[] | undefined => {
     console.log(error);
   }
 };
+
+export const updateSettingsKey = (key: string, value: string) => {
+  try {
+    console.log(key, value);
+    const updateQuery = dataBase.prepare(`
+      UPDATE settings SET value = ? WHERE key = ?;
+    `);
+    const result = updateQuery.run(value, key);
+    console.log(result);
+  } catch (error) {
+    console.log("ERROR WHILE TRYING TO UPDATE SETTINGS");
+    console.log(error);
+  }
+};

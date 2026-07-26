@@ -59,7 +59,10 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
       newState.settingsData.movies_directory_path = path;
     }
     setState(newState);
-    window.settings.saveSettingsData(newState.settingsData);
+    window.settings.saveSettingsData({
+      key: "movies_directory_path",
+      value: path,
+    });
   };
 
   const setSubtitleColor = (color: string) => {
