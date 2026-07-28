@@ -2,8 +2,16 @@ import { Box, Typography } from "@mui/material";
 import mockImage from "src/assets/mock_image.jpg";
 import LinearProgress from "@mui/material/LinearProgress";
 import PlayIcon from "../icons/PlayIcon";
+import { Movie } from "src/types/general";
+import React from "react";
 
-const ContinueWatchingVideoOption = () => {
+type continueWatchingVideoOptionProps = {
+  movie: Movie;
+};
+
+const ContinueWatchingVideoOption: React.FC<
+  continueWatchingVideoOptionProps
+> = ({ movie }) => {
   return (
     <Box
       sx={{
@@ -61,7 +69,7 @@ const ContinueWatchingVideoOption = () => {
             left: 0,
           }}
         ></Box>
-        <Typography sx={{ color: "white" }}>mr.bean_s1_eps02.mp4</Typography>
+        <Typography sx={{ color: "white" }}>{movie.title}</Typography>
       </Box>
     </Box>
   );

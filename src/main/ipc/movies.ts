@@ -32,17 +32,12 @@ const getMovieStats = (
   let result:
     | { size: number; lastModified: Date; lasOpened: Date }
     | undefined = undefined;
-  fs.stat(moviePath, (err, stats) => {
-    if (err) {
-      console.log("ERROR WHILE GETTING MOVIE STATS");
-      return;
-    }
-    result = {
-      size: stats.size,
-      lastModified: stats.mtime,
-      lasOpened: stats.atime,
-    };
-  });
+  const stats = fs.statSync(moviePath);
+  result = {
+    size: stats.size,
+    lastModified: stats.mtime,
+    lasOpened: stats.atime,
+  };
   return result;
 };
 
@@ -101,7 +96,7 @@ const getMovieInfo = (
     lastOpened: new Date(),
     numberOfCards: 0,
     lastModified: new Date(),
-    size: 0,
+    size: 2,
     folderId: folderId,
     thumbPath: "",
     path: moviePath,

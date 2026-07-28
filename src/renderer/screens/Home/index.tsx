@@ -12,6 +12,7 @@ import IconContiner from "src/renderer/components/IconContainer";
 import NoFilesIcon from "src/renderer/components/icons/NoFilesIcon";
 import Button from "src/renderer/components/Button";
 import ScanningMoviesIcon from "src/renderer/components/icons/ScanningMoviesIcon";
+import { Movie } from "src/types/general";
 
 const Home: React.FC = () => {
   const { state, setIsScanningFolder } = useContext(AppContext);
@@ -23,6 +24,10 @@ const Home: React.FC = () => {
   const allVideosListRef = useRef<HTMLDivElement>(null);
   const [showCarrousselArrows, setShowCarrousselArrows] = useState(false);
   const [disableCardAnimation, setDisableCardAnimation] = useState(false);
+  const [continueWatchingMovies, setContinueWatchingMovies] = useState<Movie[]>(
+    []
+  );
+  const [allMoviesList, setAllMoviesList] = useState<Movie[]>([]);
 
   useEffect(() => {
     const list = listRef.current;
@@ -90,6 +95,14 @@ const Home: React.FC = () => {
       setIsScanningFolder(true);
     }
   };
+
+  useEffect(() => {
+    setAllMoviesList(listOfMovies);
+    const watchingMovies = listOfMovies.filter(
+      (element) => element.watched > 0
+    );
+    setContinueWatchingMovies(watchingMovies);
+  }, [listOfMovies]);
 
   return (
     <Box
@@ -177,101 +190,106 @@ const Home: React.FC = () => {
             },
           }}
         >
-          <Typography
-            sx={{
-              color: "white",
-              fontSize: "48px",
-              marginLeft: "47px",
-              marginTop: "45px",
-            }}
-          >
-            Continue watching
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              width: "100%",
-              maxHeight: "fit-content",
-              position: "relative",
-              marginTop: "30px",
-            }}
-          >
-            <IconButton
-              icon={<LeftSideArrow />}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "0px",
-                "& svg": {
-                  width: "62px",
-                  height: "62px",
-                },
-                transform: "translateY(-50%)",
-                display: showCarrousselArrows ? "auto" : "none",
-                zIndex: 5,
-              }}
-              onClick={() => {
-                if (listContainerRef.current) {
-                  listContainerRef.current.scrollBy({
-                    left: -400,
-                    behavior: "smooth",
-                  });
-                }
-              }}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                overflowY: "hidden",
-                overflowX: "auto",
-                width: "100%",
-                position: "relative",
-                "&::-webkit-scrollbar": {
-                  display: "none",
-                },
-              }}
-              ref={listContainerRef}
-            >
+          {continueWatchingMovies.length > 0 && (
+            <>
+              <Typography
+                sx={{
+                  color: "white",
+                  fontSize: "48px",
+                  marginLeft: "47px",
+                  marginTop: "45px",
+                }}
+              >
+                Continue watching
+              </Typography>
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "flex-start",
-                  gap: "25px",
-                  flex: 1,
-                  paddingLeft: "70px",
-                  paddingRight: "70px",
-                  minWidth: "fit-content",
-                  overflowX: "hidden",
+                  width: "100%",
+                  maxHeight: "fit-content",
+                  position: "relative",
+                  marginTop: "30px",
                 }}
-                ref={listRef}
               >
-                <ContinueWatchingVideoOption />
-                <ContinueWatchingVideoOption />
-                <ContinueWatchingVideoOption />
+                <IconButton
+                  icon={<LeftSideArrow />}
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "0px",
+                    "& svg": {
+                      width: "62px",
+                      height: "62px",
+                    },
+                    transform: "translateY(-50%)",
+                    display: showCarrousselArrows ? "auto" : "none",
+                    zIndex: 5,
+                  }}
+                  onClick={() => {
+                    if (listContainerRef.current) {
+                      listContainerRef.current.scrollBy({
+                        left: -400,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    overflowY: "hidden",
+                    overflowX: "auto",
+                    width: "100%",
+                    position: "relative",
+                    "&::-webkit-scrollbar": {
+                      display: "none",
+                    },
+                  }}
+                  ref={listContainerRef}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      gap: "25px",
+                      flex: 1,
+                      paddingLeft: "70px",
+                      paddingRight: "70px",
+                      minWidth: "fit-content",
+                      overflowX: "hidden",
+                    }}
+                    ref={listRef}
+                  >
+                    {continueWatchingMovies.map((movie) => (
+                      <ContinueWatchingVideoOption movie={movie} />
+                    ))}
+                  </Box>
+                </Box>
+                <IconButton
+                  icon={<RightSideArrow />}
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "0px",
+                    "& svg": { width: "62px", height: "62px" },
+                    transform: "translateY(-50%)",
+                    display: showCarrousselArrows ? "auto" : "none",
+                    zIndex: 5,
+                  }}
+                  onClick={() => {
+                    if (listContainerRef.current) {
+                      listContainerRef.current.scrollBy({
+                        left: 400,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                />
               </Box>
-            </Box>
-            <IconButton
-              icon={<RightSideArrow />}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                right: "0px",
-                "& svg": { width: "62px", height: "62px" },
-                transform: "translateY(-50%)",
-                display: showCarrousselArrows ? "auto" : "none",
-                zIndex: 5,
-              }}
-              onClick={() => {
-                if (listContainerRef.current) {
-                  listContainerRef.current.scrollBy({
-                    left: 400,
-                    behavior: "smooth",
-                  });
-                }
-              }}
-            />
-          </Box>
+            </>
+          )}
+
           <Box sx={{ paddingTop: "45px" }}>
             <Typography
               sx={{
@@ -298,18 +316,12 @@ const Home: React.FC = () => {
               }}
               ref={allVideosListRef}
             >
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
-              <VideoOption disableAnimation={disableCardAnimation} />
+              {allMoviesList.map((movie) => (
+                <VideoOption
+                  disableAnimation={disableCardAnimation}
+                  movie={movie}
+                />
+              ))}
             </Box>
           </Box>
         </Box>

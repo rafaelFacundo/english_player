@@ -13,18 +13,21 @@ import CardIcon from "../icons/cardIcon";
 import SubtitleIcon from "../icons/SubtitleIcon";
 
 type VideoOptionProps = {
-  //movie: Movie;
+  movie: Movie;
   disableAnimation: boolean;
 };
 
-const VideoOption: React.FC<VideoOptionProps> = ({ disableAnimation }) => {
+const VideoOption: React.FC<VideoOptionProps> = ({
+  disableAnimation,
+  movie,
+}) => {
   const navigate = useNavigate();
   const { state, setCurrentMovie } = useContext(AppContext);
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <Tooltip
-      title={"MR BEAN S01 EP02"}
+      title={movie.title}
       open={disableAnimation && showTooltip}
       followCursor
       slotProps={{
@@ -65,7 +68,7 @@ const VideoOption: React.FC<VideoOptionProps> = ({ disableAnimation }) => {
           sx={{
             minWidth: "171px",
             minHeight: "239px",
-            backgroundImage: `url(${MockImage})`,
+            backgroundImage: `url(${movie.thumbPath})`,
             backgroundPosition: "center",
             borderRadius: "15px",
             "& svg": {
@@ -91,9 +94,12 @@ const VideoOption: React.FC<VideoOptionProps> = ({ disableAnimation }) => {
           }}
           className="teste"
         >
-          <IconAndText icon={<VideoNameIcon />} text={"MR Bean S01 EP02"} />
-          <IconAndText icon={<DurationIcon />} text={"1 hour 10 minutes"} />
-          <IconAndText icon={<CardIcon />} text={"23 cards added"} />
+          <IconAndText icon={<VideoNameIcon />} text={movie.title} />
+          <IconAndText icon={<DurationIcon />} text={`${movie.duration}`} />
+          <IconAndText
+            icon={<CardIcon />}
+            text={`${movie.numberOfCards} cards added`}
+          />
           <IconAndText
             icon={<SubtitleIcon />}
             text={"Subtitle file: adalksmdlaksm.srt"}
