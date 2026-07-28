@@ -8,6 +8,13 @@ contextBridge.exposeInMainWorld("directory", {
       console.log("GOT MOVIES LIST FROM MAIN");
       functionToSaveData(args);
     }),
+  saveNewFolderOnDB: (path: string) =>
+    ipcRenderer.send("save_new_folder_on_db", path),
+  onSaveFolderOnDB: (functionToSaveFolder: (path: string) => void) =>
+    ipcRenderer.on("on_save_folder_on_db", (_event, args) => {
+      console.log("got result from save folder operation", args);
+      functionToSaveFolder(args);
+    }),
 });
 
 contextBridge.exposeInMainWorld("movies", {

@@ -11,10 +11,12 @@ import RightSideArrow from "src/renderer/components/icons/RightSideArrow";
 import IconContiner from "src/renderer/components/IconContainer";
 import NoFilesIcon from "src/renderer/components/icons/NoFilesIcon";
 import Button from "src/renderer/components/Button";
+import ScanningMoviesIcon from "src/renderer/components/icons/ScanningMoviesIcon";
 
 const Home: React.FC = () => {
-  const { state, setMoviesFolder } = useContext(AppContext);
+  const { state, setIsScanningFolder } = useContext(AppContext);
   const listOfMovies = state.moviesData;
+  const isScanningMovies = state.isScanningFolder;
   const moviesFolderPath = state.settingsData.movies_directory_path;
   const listRef = useRef<HTMLDivElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -83,8 +85,10 @@ const Home: React.FC = () => {
 
   const handleSelectFolder = async () => {
     const folderSelected = await window.directory.getFolderPath();
-    // just for test, after the implementation this line will be removed
-    setMoviesFolder(folderSelected);
+    if (folderSelected) {
+      window.directory.saveNewFolderOnDB(folderSelected);
+      setIsScanningFolder(true);
+    }
   };
 
   return (
@@ -98,7 +102,9 @@ const Home: React.FC = () => {
       })}
     >
       <SideBar />
-      {moviesFolderPath === "" || listOfMovies.length === 0 ? (
+      {isScanningMovies ||
+      moviesFolderPath === "" ||
+      listOfMovies.length === 0 ? (
         <Box
           sx={{
             display: "flex",
@@ -111,9 +117,21 @@ const Home: React.FC = () => {
           }}
         >
           <IconContiner iconHeight={190} iconWidth={190}>
-            <NoFilesIcon />
+            {isScanningMovies ? <ScanningMoviesIcon /> : <NoFilesIcon />}
           </IconContiner>
-          {moviesFolderPath === null ? (
+          {isScanningMovies ? (
+            <>
+              <Typography
+                sx={{
+                  color: "white",
+                  fontSize: "48px",
+                  marginBottom: "45px",
+                }}
+              >
+                Scanning movies folder....
+              </Typography>
+            </>
+          ) : moviesFolderPath === null ? (
             <>
               <Typography
                 sx={{

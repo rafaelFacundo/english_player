@@ -238,6 +238,19 @@ export const getFolders = (): Folder[] | undefined => {
   }
 };
 
+export const getFolderId = (path: string): number | bigint => {
+  try {
+    const selectQuery = dataBase.prepare(
+      "SELECT id FROM folders WHERE path = ?"
+    );
+    const result = selectQuery.get(path) as { id: number };
+    return result.id;
+  } catch (error) {
+    console.log("ERROR WHILE GETTING FOLDER ID");
+    console.log(error);
+  }
+};
+
 export const updateSettingsKey = (key: string, value: string) => {
   try {
     console.log(key, value);

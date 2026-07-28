@@ -5,7 +5,11 @@ import { handleSubtitleProtocol } from "./protocol/subtitle";
 import { handleImageProtocol } from "./protocol/image";
 import { handleVideoProtocol } from "./protocol/video";
 import { handleSaveCard } from "./ipc/cards";
-import { handleRefreshMoviesFolder, handleSearchForMovies } from "./ipc/movies";
+import {
+  handleRefreshMoviesFolder,
+  handleSaveNewFolder,
+  handleSearchForMovies,
+} from "./ipc/movies";
 import {
   getConfig,
   handleExportSettingsData,
@@ -91,3 +95,4 @@ ipcMain.on("searchForMovies", handleSearchForMovies);
 ipcMain.on("refreshMoviesFolder", handleRefreshMoviesFolder);
 ipcMain.on("save_card", handleSaveCard);
 ipcMain.on("get_settings_data", getConfig);
+ipcMain.on("save_new_folder_on_db", handleSaveNewFolder);

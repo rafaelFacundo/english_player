@@ -4,7 +4,8 @@ import { Movie, MovieDuration, Settings } from "src/types/general";
 export type AppState = {
   moviesData: Movie[];
   settingsData: Settings;
-  currentMovieBeingWatched: number;
+  currentMovieBeingWatched: number /* to do (change) */;
+  isScanningFolder: boolean;
 };
 
 export type AppContextType = {
@@ -16,6 +17,7 @@ export type AppContextType = {
   setSubtitleBackgroundColor: (backgroundColor: string) => void;
   setDeckName: (deckName: string) => void;
   setCurrentMovie: (moviePath: number) => void;
+  setIsScanningFolder: (value: boolean) => void;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -32,6 +34,7 @@ const initialState: AppState = {
     movies_directory_path: "",
   },
   currentMovieBeingWatched: -1,
+  isScanningFolder: false,
 };
 
 const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
@@ -55,14 +58,13 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
   const setMoviesFolder = (path: string) => {
     const newState = { ...state };
     if (path !== "") {
-      console.log("enter");
       newState.settingsData.movies_directory_path = path;
+      setState(newState);
+      window.settings.saveSettingsData({
+        key: "movies_directory_path",
+        value: path,
+      });
     }
-    setState(newState);
-    window.settings.saveSettingsData({
-      key: "movies_directory_path",
-      value: path,
-    });
   };
 
   const setSubtitleColor = (color: string) => {
@@ -89,6 +91,12 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
     setState(newState);
   };
 
+  const setIsScanningFolder = (value: boolean) => {
+    const newState = { ...state };
+    newState.isScanningFolder = value;
+    setState(newState);
+  };
+
   useEffect(() => {
     if (
       state.settingsData.movies_directory_path !== "" &&
@@ -102,6 +110,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
     window.settings.getSettingsData();
     window.directory.onGetMoviesFromDirectory(setMoviesList);
     window.settings.onGetSettingsData(setSettings);
+    window.directory.onSaveFolderOnDB(setMoviesFolder);
   }, []);
 
   return (
@@ -115,6 +124,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
         setSubtitleBackgroundColor,
         setDeckName,
         setCurrentMovie,
+        setIsScanningFolder,
       }}
     >
       {children}

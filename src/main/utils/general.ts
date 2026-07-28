@@ -11,9 +11,9 @@ import { getSettings, insertKeySetting } from "../db";
 
 export const verifyInitialSettings = async () => {
   try {
-    /* if (!fs.existsSync(applicationMoviesThumbsPath)) {
-    createDirSync(applicationMoviesThumbsPath);
-    } */
+    if (!fs.existsSync(applicationMoviesThumbsPath)) {
+      createDirSync(applicationMoviesThumbsPath);
+    }
     const settingsList = getSettings();
     if (!settingsList) {
       console.log("THERE IS NO SETTINGS");

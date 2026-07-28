@@ -15,6 +15,7 @@ import {
   moviesIndexFIlePath,
 } from "src/main/utils/paths";
 import {
+  getFolderId,
   getMovies,
   insertNewFolder,
   insertNewMovies,
@@ -157,10 +158,7 @@ export const handleSearchForMovies = async (
   event: IpcMainEvent,
   folderPath: string
 ) => {
-  const newFolderId = insertNewFolder({
-    path: folderPath,
-    lastScan: new Date(),
-  });
+  const newFolderId = getFolderId(folderPath);
   const files = seekFiles(folderPath, newFolderId);
   const movies: Movie[] = [];
   const subtitles: Subtitle[] = [];
@@ -171,8 +169,9 @@ export const handleSearchForMovies = async (
       subtitles.push(file as Subtitle);
     }
   });
-  insertNewMovies(movies);
-  insertNewSubtitles(subtitles);
+  await insertNewMovies(movies);
+  await insertNewSubtitles(subtitles);
+  event.reply("on-get-movies", movies);
 };
 
 export const handleRefreshMoviesFolder = async (
@@ -187,5 +186,25 @@ export const handleRefreshMoviesFolder = async (
     })
   );
   if (moviesIndexFile[pathHash]) {
+  }
+};
+
+export const handleSaveNewFolder = async (
+  event: IpcMainEvent,
+  folderPath: string
+) => {
+  try {
+    const newFolderId = insertNewFolder({
+      path: folderPath,
+      lastScan: new Date(),
+    });
+    if (newFolderId) {
+      event.reply("on_save_folder_on_db", folderPath);
+    } else {
+      event.reply("on_save_folder_on_db", folderPath);
+    }
+  } catch (error) {
+    console.log("ERROR WHILE SAVING NEW FOLDER");
+    console.log(error);
   }
 };

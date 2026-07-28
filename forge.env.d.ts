@@ -13,6 +13,8 @@ declare global {
       onGetMoviesFromDirectory: (
         functionToSaveData: (data: Movie[]) => void
       ) => void;
+      saveNewFolderOnDB: (path: string) => void;
+      onSaveFolderOnDB: (functionToSaveFolder: (path: string) => void) => void;
     };
     movies: {
       seachForMovies: (path: string) => void;
