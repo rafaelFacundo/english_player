@@ -68,7 +68,7 @@ const VideoOption: React.FC<VideoOptionProps> = ({
           sx={{
             minWidth: "171px",
             minHeight: "239px",
-            backgroundImage: `url(image:/${movie.thumbPath})`,
+            backgroundImage: `url(image://${movie.thumbPath})`,
             backgroundPosition: "center",
             borderRadius: "15px",
             "& svg": {

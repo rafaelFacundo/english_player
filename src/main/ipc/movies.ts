@@ -53,12 +53,17 @@ const getMovieDuration = (videoPath: string): number => {
   }
 };
 
-const getMovieThumb = (videoPath: string, videoName: string): string => {
+const getMovieThumb = (
+  videoPath: string,
+  videoName: string,
+  movieDuration: number
+): string => {
   try {
+    const frameTime = Math.round(movieDuration / 2);
     const videoNameHash = crypto.hash("sha256", videoName);
     const thumbImagePath = `${applicationMoviesThumbsPath}/${videoNameHash}.jpg`;
     execSync(
-      `ffmpeg -v error -ss 00:10:10 -i ${videoPath} -frames:v 1 -q:v 2 ${thumbImagePath}`
+      `ffmpeg -v error -ss 00:${frameTime}:00 -i "${videoPath}" -frames:v 1 -q:v 2 "${thumbImagePath}"`
     );
     return thumbImagePath;
   } catch (error) {
@@ -102,8 +107,8 @@ const getMovieInfo = (
     path: moviePath,
     type: FileType.Movie,
   };
-  movie.thumbPath = getMovieThumb(moviePath, item.name);
   movie.duration = getMovieDuration(moviePath);
+  movie.thumbPath = getMovieThumb(moviePath, item.name, movie.duration);
   const movieStats = getMovieStats(moviePath);
   if (movieStats) {
     movie.size = movieStats.size;
