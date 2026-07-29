@@ -21,13 +21,13 @@ const Home: React.FC = () => {
   const moviesFolderPath = state.settingsData.movies_directory_path;
   const listRef = useRef<HTMLDivElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const allVideosListRef = useRef<HTMLDivElement>(null);
   const [showCarrousselArrows, setShowCarrousselArrows] = useState(false);
   const [disableCardAnimation, setDisableCardAnimation] = useState(false);
   const [continueWatchingMovies, setContinueWatchingMovies] = useState<Movie[]>(
     []
   );
   const [allMoviesList, setAllMoviesList] = useState<Movie[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const list = listRef.current;
@@ -67,12 +67,13 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const listRef = allVideosListRef.current;
-    if (listRef) {
+    const container = containerRef.current;
+    if (container) {
       const resizeObserver = new ResizeObserver(
         (entries: ResizeObserverEntry[]) => {
-          const listRectWidth = entries[0].target.getBoundingClientRect().width;
-          if (listRectWidth <= 1400) {
+          const containerWidth =
+            entries[0].target.getBoundingClientRect().width;
+          if (containerWidth <= 1400) {
             setDisableCardAnimation(true);
           } else {
             setDisableCardAnimation(false);
@@ -80,10 +81,10 @@ const Home: React.FC = () => {
         }
       );
 
-      resizeObserver.observe(listRef);
+      resizeObserver.observe(container);
 
       return () => {
-        resizeObserver.unobserve(listRef);
+        resizeObserver.unobserve(container);
       };
     }
   }, []);
@@ -113,6 +114,7 @@ const Home: React.FC = () => {
         height: "100%",
         display: "flex",
       })}
+      ref={containerRef}
     >
       <SideBar />
       {isScanningMovies ||
@@ -314,7 +316,6 @@ const Home: React.FC = () => {
                 paddingTop: "20px",
                 transition: "1s all ease-out",
               }}
-              ref={allVideosListRef}
             >
               {allMoviesList.map((movie) => (
                 <VideoOption
