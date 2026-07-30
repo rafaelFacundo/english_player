@@ -94,7 +94,7 @@ const VideoOption: React.FC<VideoOptionProps> = ({
           }}
           className="teste"
         >
-          <IconAndText icon={<VideoNameIcon />} text={movie.title} />
+          <IconAndText checkSize icon={<VideoNameIcon />} text={movie.title} />
           <IconAndText icon={<DurationIcon />} text={`${movie.duration}`} />
           <IconAndText
             icon={<CardIcon />}
