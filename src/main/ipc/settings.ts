@@ -10,7 +10,12 @@ export const handleExportSettingsData = async (
   event: IpcMainEvent,
   data: { key: string; value: string }
 ) => {
-  updateSettingsKey(data.key, data.value);
+  const result = updateSettingsKey(data.key, data.value);
+  if (result && result.changes == 1) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 export const getConfig = (event: IpcMainEvent, _: any) => {

@@ -1,7 +1,7 @@
 /// <reference types="@electron-forge/plugin-vite/forge-vite-env" />
 /// <reference types="vite/client" />
 
-import { Movie } from "./src/types/general";
+import { Folder, Movie } from "./src/types/general";
 export {};
 
 declare module "*.png";
@@ -13,8 +13,9 @@ declare global {
       onGetMoviesFromDirectory: (
         functionToSaveData: (data: Movie[]) => void
       ) => void;
-      saveNewFolderOnDB: (path: string) => void;
+      saveNewFolderOnDB: (path: string) => boolean;
       onSaveFolderOnDB: (functionToSaveFolder: (path: string) => void) => void;
+      getDirectoryList: () => Folder[];
     };
     movies: {
       seachForMovies: (path: string) => void;
@@ -23,7 +24,7 @@ declare global {
     settings: {
       onGetSettingsData: (unctionToSaveData: (data: Settings) => void) => void;
       getSettingsData: () => void;
-      saveSettingsData: (data: Settings) => void;
+      saveSettingsData: (data: Settings) => boolean;
     };
     deck: {
       saveCard: (data: Card) => void;

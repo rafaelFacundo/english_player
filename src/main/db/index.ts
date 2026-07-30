@@ -258,7 +258,7 @@ export const updateSettingsKey = (key: string, value: string) => {
       UPDATE settings SET value = ? WHERE key = ?;
     `);
     const result = updateQuery.run(value, key);
-    console.log(result);
+    return result;
   } catch (error) {
     console.log("ERROR WHILE TRYING TO UPDATE SETTINGS");
     console.log(error);

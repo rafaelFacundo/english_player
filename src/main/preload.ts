@@ -9,12 +9,13 @@ contextBridge.exposeInMainWorld("directory", {
       functionToSaveData(args);
     }),
   saveNewFolderOnDB: (path: string) =>
-    ipcRenderer.send("save_new_folder_on_db", path),
+    ipcRenderer.invoke("save_new_folder_on_db", path),
   onSaveFolderOnDB: (functionToSaveFolder: (path: string) => void) =>
     ipcRenderer.on("on_save_folder_on_db", (_event, args) => {
       console.log("got result from save folder operation", args);
       functionToSaveFolder(args);
     }),
+  getDirectoryList: () => ipcRenderer.invoke("get_directory_list"),
 });
 
 contextBridge.exposeInMainWorld("movies", {
@@ -32,9 +33,8 @@ contextBridge.exposeInMainWorld("settings", {
       functionToSaveData(data);
     }),
   getSettingsData: () => ipcRenderer.send("get_settings_data"),
-  saveSettingsData: (data: Settings) => {
-    ipcRenderer.send("save_settings_data", data);
-  },
+  saveSettingsData: (data: Settings) =>
+    ipcRenderer.invoke("save_settings_data", data),
 });
 
 contextBridge.exposeInMainWorld("deck", {

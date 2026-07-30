@@ -6,6 +6,7 @@ import { handleImageProtocol } from "./protocol/image";
 import { handleVideoProtocol } from "./protocol/video";
 import { handleSaveCard } from "./ipc/cards";
 import {
+  handleGetFoldersList,
   handleRefreshMoviesFolder,
   handleSaveNewFolder,
   handleSearchForMovies,
@@ -90,9 +91,10 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.on("save_settings_data", handleExportSettingsData);
+ipcMain.handle("save_settings_data", handleExportSettingsData);
 ipcMain.on("searchForMovies", handleSearchForMovies);
 ipcMain.on("refreshMoviesFolder", handleRefreshMoviesFolder);
 ipcMain.on("save_card", handleSaveCard);
 ipcMain.on("get_settings_data", getConfig);
-ipcMain.on("save_new_folder_on_db", handleSaveNewFolder);
+ipcMain.handle("save_new_folder_on_db", handleSaveNewFolder);
+ipcMain.handle("get_directory_list", handleGetFoldersList);

@@ -56,10 +56,6 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
           movies_directory_path: path,
         },
       }));
-      window.settings.saveSettingsData({
-        key: "movies_directory_path",
-        value: path,
-      });
     }
   };
 
@@ -98,19 +94,39 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (
-      state.settingsData.movies_directory_path !== "" &&
-      state.settingsData.movies_directory_path !== null
-    ) {
-      window.movies.seachForMovies(state.settingsData.movies_directory_path);
-    }
+    const scanForMovies = async () => {
+      if (
+        state.settingsData.movies_directory_path !== "" &&
+        state.settingsData.movies_directory_path !== null
+      ) {
+        const foldersList = await window.directory.getDirectoryList();
+        const path = state.settingsData.movies_directory_path;
+        const folderAlreadySaved = foldersList.findIndex(
+          (folder) => folder.path === state.settingsData.movies_directory_path
+        );
+        if (folderAlreadySaved === -1) {
+          const saveFolderResult =
+            await window.directory.saveNewFolderOnDB(path);
+
+          const updateSettingsResult = await window.settings.saveSettingsData({
+            key: "movies_directory_path",
+            value: path,
+          });
+          if (updateSettingsResult && saveFolderResult) {
+            window.movies.seachForMovies(
+              state.settingsData.movies_directory_path
+            );
+          }
+        }
+      }
+    };
+    scanForMovies();
   }, [state.settingsData.movies_directory_path]);
 
   useEffect(() => {
     window.settings.getSettingsData();
     window.directory.onGetMoviesFromDirectory(setMoviesList);
     window.settings.onGetSettingsData(setSettings);
-    window.directory.onSaveFolderOnDB(setMoviesFolder);
   }, []);
 
   return (

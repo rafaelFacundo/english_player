@@ -2,7 +2,7 @@ import fs, { Dirent, readdirSync } from "node:fs";
 import crypto from "node:crypto";
 import path from "node:path";
 import { IpcMainEvent } from "electron";
-import { File, FileType, Movie, Subtitle } from "src/types/general";
+import { File, FileType, Folder, Movie, Subtitle } from "src/types/general";
 import {
   createAfile,
   createDirSync,
@@ -16,6 +16,7 @@ import {
 } from "src/main/utils/paths";
 import {
   getFolderId,
+  getFolders,
   getMovies,
   insertNewFolder,
   insertNewMovies,
@@ -199,12 +200,24 @@ export const handleSaveNewFolder = async (
       lastScan: new Date(),
     });
     if (newFolderId) {
-      event.reply("on_save_folder_on_db", folderPath);
+      return true;
     } else {
-      event.reply("on_save_folder_on_db", folderPath);
+      return false;
     }
   } catch (error) {
     console.log("ERROR WHILE SAVING NEW FOLDER");
     console.log(error);
+  }
+};
+
+export const handleGetFoldersList = (): Folder[] => {
+  try {
+    console.log("LKAJLDKSJLDKj");
+    const folders = getFolders();
+    return folders;
+  } catch (error) {
+    console.log("ERROR WHILE RECOVERING FOLDERS LIST");
+    console.log(error);
+    return [];
   }
 };

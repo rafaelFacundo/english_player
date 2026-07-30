@@ -15,7 +15,8 @@ import ScanningMoviesIcon from "src/renderer/components/icons/ScanningMoviesIcon
 import { Movie } from "src/types/general";
 
 const Home: React.FC = () => {
-  const { state, setIsScanningFolder } = useContext(AppContext);
+  const { state, setIsScanningFolder, setMoviesFolder } =
+    useContext(AppContext);
   const listOfMovies = state.moviesData;
   const isScanningMovies = state.isScanningFolder;
   const moviesFolderPath = state.settingsData.movies_directory_path;
@@ -92,7 +93,8 @@ const Home: React.FC = () => {
   const handleSelectFolder = async () => {
     const folderSelected = await window.directory.getFolderPath();
     if (folderSelected) {
-      window.directory.saveNewFolderOnDB(folderSelected);
+      setMoviesFolder(folderSelected);
+
       setIsScanningFolder(true);
     }
   };
