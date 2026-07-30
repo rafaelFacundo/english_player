@@ -15,7 +15,6 @@ export type AppContextType = {
   setMoviesFolder: (path: string) => void;
   setSubtitleColor: (color: string) => void;
   setSubtitleBackgroundColor: (backgroundColor: string) => void;
-  setDeckName: (deckName: string) => void;
   setCurrentMovie: (moviePath: number) => void;
   setIsScanningFolder: (value: boolean) => void;
 };
@@ -41,25 +40,22 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
   const [state, setState] = useState<AppState>(initialState);
 
   const setMoviesList = (moviesList: Movie[]) => {
-    setState((prevState) => {
-      const newState = { ...prevState, moviesData: moviesList };
-      console.log("SET MOVIES LIST STATE", newState);
-      return newState;
-    });
+    setState((prevState) => ({ ...prevState, moviesData: moviesList }));
   };
 
   const setSettings = (newSettings: Settings) => {
-    console.log("asdas", newSettings);
-    const newState = { ...state };
-    newState.settingsData = newSettings;
-    setState(newState);
+    setState((prevState) => ({ ...prevState, settingsData: newSettings }));
   };
 
   const setMoviesFolder = (path: string) => {
-    const newState = { ...state };
     if (path !== "") {
-      newState.settingsData.movies_directory_path = path;
-      setState(newState);
+      setState((prevState) => ({
+        ...prevState,
+        settingsData: {
+          ...prevState.settingsData,
+          movies_directory_path: path,
+        },
+      }));
       window.settings.saveSettingsData({
         key: "movies_directory_path",
         value: path,
@@ -68,33 +64,37 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
   };
 
   const setSubtitleColor = (color: string) => {
-    const newState = { ...state };
-    newState.settingsData.subtitle_color = color;
-    setState(newState);
+    setState((prevState) => ({
+      ...prevState,
+      settingsData: {
+        ...prevState.settingsData,
+        subtitle_color: color,
+      },
+    }));
   };
 
   const setSubtitleBackgroundColor = (backgroundColor: string) => {
-    const newState = { ...state };
-    newState.settingsData.subtitle_background_color = backgroundColor;
-    setState(newState);
-  };
-
-  const setDeckName = (deckName: string) => {
-    const newState = { ...state };
-    setState(newState);
-    window.settings.saveSettingsData(newState.settingsData);
+    setState((prevState) => ({
+      ...prevState,
+      settingsData: {
+        ...prevState.settingsData,
+        subtitle_background_color: backgroundColor,
+      },
+    }));
   };
 
   const setCurrentMovie = (moviePath: number) => {
-    const newState = { ...state };
-    newState.currentMovieBeingWatched = moviePath;
-    setState(newState);
+    setState((prevState) => ({
+      ...prevState,
+      currentMovieBeingWatched: moviePath,
+    }));
   };
 
   const setIsScanningFolder = (value: boolean) => {
-    const newState = { ...state };
-    newState.isScanningFolder = value;
-    setState(newState);
+    setState((prevState) => ({
+      ...prevState,
+      isScanningFolder: value,
+    }));
   };
 
   useEffect(() => {
@@ -122,7 +122,6 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
         setMoviesFolder,
         setSubtitleColor,
         setSubtitleBackgroundColor,
-        setDeckName,
         setCurrentMovie,
         setIsScanningFolder,
       }}

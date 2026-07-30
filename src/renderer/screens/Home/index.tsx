@@ -98,11 +98,14 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    setAllMoviesList(listOfMovies);
-    const watchingMovies = listOfMovies.filter(
-      (element) => element.watched > 0
-    );
-    setContinueWatchingMovies(watchingMovies);
+    if (listOfMovies.length > 0) {
+      setAllMoviesList(listOfMovies);
+      const watchingMovies = listOfMovies.filter(
+        (element) => element.watched > 0
+      );
+      setContinueWatchingMovies(watchingMovies);
+      setIsScanningFolder(false);
+    }
   }, [listOfMovies]);
 
   return (
