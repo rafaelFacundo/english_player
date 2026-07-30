@@ -4,7 +4,7 @@ import { Movie, MovieDuration, Settings } from "src/types/general";
 export type AppState = {
   moviesData: Movie[];
   settingsData: Settings;
-  currentMovieBeingWatched: number /* to do (change) */;
+  currentMovieBeingWatched: string;
   isScanningFolder: boolean;
 };
 
@@ -15,7 +15,7 @@ export type AppContextType = {
   setMoviesFolder: (path: string) => void;
   setSubtitleColor: (color: string) => void;
   setSubtitleBackgroundColor: (backgroundColor: string) => void;
-  setCurrentMovie: (moviePath: number) => void;
+  setCurrentMovie: (moviePath: string) => void;
   setIsScanningFolder: (value: boolean) => void;
 };
 
@@ -32,7 +32,7 @@ const initialState: AppState = {
     subtitle_background_color: "000000",
     movies_directory_path: "",
   },
-  currentMovieBeingWatched: -1,
+  currentMovieBeingWatched: "",
   isScanningFolder: false,
 };
 
@@ -79,7 +79,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
     }));
   };
 
-  const setCurrentMovie = (moviePath: number) => {
+  const setCurrentMovie = (moviePath: string) => {
     setState((prevState) => ({
       ...prevState,
       currentMovieBeingWatched: moviePath,

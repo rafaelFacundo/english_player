@@ -63,6 +63,10 @@ const VideoOption: React.FC<VideoOptionProps> = ({
             cursor: "pointer",
           },
         }}
+        onClick={() => {
+          setCurrentMovie(movie.path);
+          navigate("/video");
+        }}
       >
         <Box
           sx={{

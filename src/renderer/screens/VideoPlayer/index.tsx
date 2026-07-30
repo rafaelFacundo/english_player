@@ -13,15 +13,15 @@ import AddWordIcon from "src/renderer/components/icons/AddWordIcon";
 import CancelAddIcon from "src/renderer/components/icons/CancelAddIcon";
 import { DictionaryTranslation, Subtitle } from "src/types/general";
 import axios from "axios";
+import IconButton from "src/renderer/components/IconButton";
 
 const VideoPlayer: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   let navigate = useNavigate();
   const { state } = useContext(AppContext);
-  const subtitleColor = state.settingsData.subtitleColor;
-  const currentDeckName = state.settingsData.deckName;
-  const subtitleBackground = state.settingsData.subtitleBackgroundColor;
+  const subtitleColor = state.settingsData.subtitle_color;
+  const subtitleBackground = state.settingsData.subtitle_background_color;
   const [currentMoviePath, setCurrentMoviePath] = useState<string>("");
   const [playVideo, setPlayVideo] = useState<boolean>(false);
   const [currentAspectRatio, setCurrentAspectRatio] = useState<number>(0);
@@ -71,7 +71,7 @@ const VideoPlayer: React.FC = () => {
   };
 
   const handleShowSubtitle = () => {
-    if (videoRef.current) {
+    /*  if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const currentSubtitle = subtitleArray[currentSubtitleIndex];
       if (
@@ -85,11 +85,11 @@ const VideoPlayer: React.FC = () => {
           setCurrentSubTitleIndex(currentSubtitleIndex + 1);
         setCurrentSubtitleToShow(undefined);
       }
-    }
+    } */
   };
 
   const handleSeekSubtitle = () => {
-    if (videoRef.current) {
+    /* if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
 
       const index = subtitleArray.findIndex(
@@ -105,7 +105,7 @@ const VideoPlayer: React.FC = () => {
         );
         setCurrentSubtitleToShow(null);
       }
-    }
+    } */
   };
 
   const handleForwardTenSeconds = () => {
@@ -150,7 +150,7 @@ const VideoPlayer: React.FC = () => {
   };
 
   const handleSaveWord = (word: string, meaning: string) => {
-    window.deck.saveCard({
+    /* window.deck.saveCard({
       front: word,
       back: meaning,
       deckName: currentDeckName,
@@ -159,24 +159,24 @@ const VideoPlayer: React.FC = () => {
     setCurrentWord("");
     if (videoRef.current) {
       videoRef.current.play();
-    }
+    } */
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const currentMovie = state.currentMovieBeingWatched;
-      if (currentMovie !== -1) {
+      if (currentMovie !== "") {
         const currentMovieObject = state.moviesData.find(
-          (movie) => movie.id === currentMovie
+          (movie) => movie.path === currentMovie
         );
         setVideoDuration(currentMovieObject.duration);
         setCurrentMoviePath(`video://${currentMovieObject.path}`);
-        const subtitleResponse = await fetch(
+        /* const subtitleResponse = await fetch(
           `subtitle://${currentMovieObject.subtitlesPath}`
         );
 
         const jsonnn = await subtitleResponse.json();
-        setSubtitleArray(jsonnn);
+        setSubtitleArray(jsonnn); */
       }
     };
     fetchData();
@@ -250,7 +250,7 @@ const VideoPlayer: React.FC = () => {
                 bottom: isMouseMoving ? "250px" : "50px",
               }}
             >
-              {currentSubtitleToShow.firstLIne !== "" && (
+              {/* {currentSubtitleToShow.firstLIne !== "" && (
                 <div id="videoPlayer_subtitlesContainer_firstLine">
                   {currentSubtitleToShow.firstLIne.split(" ").map((word) => (
                     <span
@@ -273,7 +273,7 @@ const VideoPlayer: React.FC = () => {
                     </span>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
           )}
 
@@ -289,33 +289,28 @@ const VideoPlayer: React.FC = () => {
               />
 
               <div id="videoPlayer_controls_buttons">
-                {/* <Button
-                  className="videoPlayer_controlButton"
+                <IconButton
                   icon={<BackIcon />}
                   onClick={() => {
                     navigate(-1);
                   }}
                 />
-                <Button
-                  className="videoPlayer_controlButton"
+                <IconButton
                   icon={<BackTenSecondsIcon />}
                   onClick={() => handleBackTenSeconds()}
                 />
-                <Button
-                  className="videoPlayer_controlButton"
+                <IconButton
                   onClick={() => handlePlayOrPause()}
                   icon={!playVideo ? <PlayIcon /> : <PauseIcon />}
                 />
-                <Button
-                  className="videoPlayer_controlButton"
+                <IconButton
                   icon={<FowardTenSeconds />}
                   onClick={() => handleForwardTenSeconds()}
                 />
-                <Button
-                  className="videoPlayer_controlButton"
+                <IconButton
                   icon={<AspectRatioButton />}
                   onClick={() => handleAspectRatio()}
-                /> */}
+                />
               </div>
             </div>
           )}
