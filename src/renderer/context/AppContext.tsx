@@ -1,11 +1,12 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Movie, MovieDuration, Settings } from "src/types/general";
+import { Movie, MovieDuration, Settings, Subtitle } from "src/types/general";
 
 export type AppState = {
   moviesData: Movie[];
   settingsData: Settings;
   currentMovieBeingWatched: string;
   isScanningFolder: boolean;
+  subtitles: Subtitle[];
 };
 
 export type AppContextType = {
@@ -17,6 +18,7 @@ export type AppContextType = {
   setSubtitleBackgroundColor: (backgroundColor: string) => void;
   setCurrentMovie: (moviePath: string) => void;
   setIsScanningFolder: (value: boolean) => void;
+  setSubtitlesList: (subtitlesList: Subtitle[]) => void;
 };
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -34,6 +36,7 @@ const initialState: AppState = {
   },
   currentMovieBeingWatched: "",
   isScanningFolder: false,
+  subtitles: [],
 };
 
 const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
@@ -41,6 +44,10 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
 
   const setMoviesList = (moviesList: Movie[]) => {
     setState((prevState) => ({ ...prevState, moviesData: moviesList }));
+  };
+
+  const setSubtitlesList = (subtitlesList: Subtitle[]) => {
+    setState((prevState) => ({ ...prevState, subtitles: subtitlesList }));
   };
 
   const setSettings = (newSettings: Settings) => {
@@ -127,6 +134,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
     window.settings.getSettingsData();
     window.directory.onGetMoviesFromDirectory(setMoviesList);
     window.settings.onGetSettingsData(setSettings);
+    window.movies.onGetSubtitles(setSubtitlesList);
   }, []);
 
   return (
@@ -140,6 +148,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
         setSubtitleBackgroundColor,
         setCurrentMovie,
         setIsScanningFolder,
+        setSubtitlesList,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 /// <reference types="@electron-forge/plugin-vite/forge-vite-env" />
 /// <reference types="vite/client" />
 
-import { Folder, Movie } from "./src/types/general";
+import { Folder, Movie, Subtitle } from "./src/types/general";
 export {};
 
 declare module "*.png";
@@ -20,6 +20,10 @@ declare global {
     movies: {
       seachForMovies: (path: string) => void;
       refreshMoviesFolder: (path: string) => void;
+      getSubtitles: () => void;
+      onGetSubtitles: (
+        functionToSaveSubtitles: (subtitlesList: Subtitle[]) => void
+      ) => void;
     };
     settings: {
       onGetSettingsData: (unctionToSaveData: (data: Settings) => void) => void;

@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { Card, Movie, Settings } from "../types/general";
+import { Card, Movie, Settings, Subtitle } from "../types/general";
 
 contextBridge.exposeInMainWorld("directory", {
   getFolderPath: () => ipcRenderer.invoke("getFolderPath"),
@@ -25,6 +25,13 @@ contextBridge.exposeInMainWorld("movies", {
   refreshMoviesFolder: (path: string) => {
     ipcRenderer.send("refreshMoviesFolder", path);
   },
+  getSubtitles: () => ipcRenderer.send("get_subtitles"),
+  onGetSubtitles: (
+    functionToSaveSubtitles: (subtitlesList: Subtitle[]) => void
+  ) =>
+    ipcRenderer.on("on_get_subtitles", (_event, args) => {
+      functionToSaveSubtitles(args);
+    }),
 });
 
 contextBridge.exposeInMainWorld("settings", {

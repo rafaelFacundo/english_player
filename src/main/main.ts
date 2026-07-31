@@ -7,6 +7,7 @@ import { handleVideoProtocol } from "./protocol/video";
 import { handleSaveCard } from "./ipc/cards";
 import {
   handleGetFoldersList,
+  handleGetSubtitles,
   handleRefreshMoviesFolder,
   handleSaveNewFolder,
   handleSearchForMovies,
@@ -98,3 +99,4 @@ ipcMain.on("save_card", handleSaveCard);
 ipcMain.on("get_settings_data", getConfig);
 ipcMain.handle("save_new_folder_on_db", handleSaveNewFolder);
 ipcMain.handle("get_directory_list", handleGetFoldersList);
+ipcMain.on("get_subtitles", handleGetSubtitles);

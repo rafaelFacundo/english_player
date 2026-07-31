@@ -18,6 +18,7 @@ import {
   getFolderId,
   getFolders,
   getMovies,
+  getSubtitles,
   insertNewFolder,
   insertNewMovies,
   insertNewSubtitles,
@@ -173,6 +174,7 @@ export const handleSearchForMovies = async (
   await insertNewMovies(movies);
   await insertNewSubtitles(subtitles);
   event.reply("on-get-movies", movies);
+  event.reply("on_get_subtitles", subtitles);
 };
 
 export const handleRefreshMoviesFolder = async (
@@ -212,12 +214,22 @@ export const handleSaveNewFolder = async (
 
 export const handleGetFoldersList = (): Folder[] => {
   try {
-    console.log("LKAJLDKSJLDKj");
     const folders = getFolders();
     return folders;
   } catch (error) {
     console.log("ERROR WHILE RECOVERING FOLDERS LIST");
     console.log(error);
     return [];
+  }
+};
+
+export const handleGetSubtitles = (event: IpcMainEvent) => {
+  try {
+    const subtitles = getSubtitles();
+    event.reply("on_get_subtitles", subtitles);
+  } catch (error) {
+    console.log("ERROR WHILE RECOVERING SUBTITLES LIST");
+    console.log(error);
+    event.reply("on_get_subtitles", []);
   }
 };
