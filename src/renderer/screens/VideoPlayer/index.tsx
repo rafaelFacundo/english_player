@@ -7,13 +7,18 @@ import PauseIcon from "src/renderer/components/icons/PauseIcon";
 //import Button from "src/renderer/components/Button";
 import BackTenSecondsIcon from "src/renderer/components/icons/BackTenSeconds";
 import FowardTenSeconds from "src/renderer/components/icons/FowardTenSeconds";
-import AspectRatioButton from "src/renderer/components/icons/AspectRatioButton";
+import AspectRatioIcon from "src/renderer/components/icons/AspectRatioIcon";
 import BackIcon from "src/renderer/components/icons/BackIcon";
 import AddWordIcon from "src/renderer/components/icons/AddWordIcon";
 import CancelAddIcon from "src/renderer/components/icons/CancelAddIcon";
 import { DictionaryTranslation, Subtitle } from "src/types/general";
 import axios from "axios";
 import IconButton from "src/renderer/components/IconButton";
+import { alpha, Box, Typography } from "@mui/material";
+import PreviousVideoIcon from "src/renderer/components/icons/PreviousVideoIcon";
+import NextVideoIcon from "src/renderer/components/icons/NextVideoIcon";
+import VideoSubtitlesIcon from "src/renderer/components/icons/VideoSubtitlesIcon";
+import Slider from "@mui/material/Slider";
 
 const VideoPlayer: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -52,14 +57,12 @@ const VideoPlayer: React.FC = () => {
     }
   };
 
-  const handleSeekOnProgressBar = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSeekOnProgressBar = (event: Event, newValue: number) => {
     if (!videoRef.current) return;
-    const inputValue = parseFloat(event.target.value);
-    const newTime = (inputValue / 100) * (videoDuration * 60);
+
+    const newTime = (newValue / 100) * (videoDuration * 60);
     videoRef.current.currentTime = newTime;
-    setPercentageWatched(inputValue);
+    setPercentageWatched(newValue);
   };
 
   const handleTimeUpdate = () => {
@@ -225,9 +228,46 @@ const VideoPlayer: React.FC = () => {
   }, []);
 
   return (
-    <div ref={videoContainerRef} id="videoPlayer_container">
+    <Box
+      ref={videoContainerRef}
+      sx={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "black",
+      }}
+    >
       {currentMoviePath !== "" ? (
-        <div id="videoPlayer_videoAndControls_container">
+        <Box
+          sx={{
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: " 100%",
+            backgroundColor: "white",
+            overflow: "hidden",
+          }}
+        >
+          {isMouseMoving && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "20px",
+                left: "10px",
+                cursor: "pointer",
+              }}
+            >
+              <IconButton
+                icon={<BackIcon />}
+                onClick={() => {
+                  navigate(-1);
+                }}
+              />
+            </Box>
+          )}
+
           <video
             ref={videoRef}
             id="videoPlayer_video_player"
@@ -278,43 +318,137 @@ const VideoPlayer: React.FC = () => {
           )}
 
           {isMouseMoving && (
-            <div id="videoPlayer_controls_and_progres_bar">
-              <input
-                type="range"
-                id="videoPlayer_progressBar"
+            <Box
+              sx={(theme) => ({
+                position: "absolute",
+                left: "0px",
+                bottom: "0px",
+                width: "100%",
+                height: "200px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundImage: `linear-gradient(to top right, ${alpha(theme.palette.backgroundColor.main, 0.1)}, ${alpha(theme.palette.primary.dark, 0.1)})`,
+              })}
+            >
+              <Slider
                 min={0}
                 max={100}
                 value={percentageWatched}
                 onChange={handleSeekOnProgressBar}
+                size="medium"
               />
 
-              <div id="videoPlayer_controls_buttons">
-                <IconButton
-                  icon={<BackIcon />}
-                  onClick={() => {
-                    navigate(-1);
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "35px",
+                  height: "100%",
+                  width: "100%",
+                  position: "relative",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "35px",
+                    height: "100%",
                   }}
-                />
-                <IconButton
-                  icon={<BackTenSecondsIcon />}
-                  onClick={() => handleBackTenSeconds()}
-                />
-                <IconButton
-                  onClick={() => handlePlayOrPause()}
-                  icon={!playVideo ? <PlayIcon /> : <PauseIcon />}
-                />
-                <IconButton
-                  icon={<FowardTenSeconds />}
-                  onClick={() => handleForwardTenSeconds()}
-                />
-                <IconButton
-                  icon={<AspectRatioButton />}
-                  onClick={() => handleAspectRatio()}
-                />
-              </div>
-            </div>
+                >
+                  <IconButton
+                    icon={<BackTenSecondsIcon />}
+                    onClick={() => handleBackTenSeconds()}
+                    sx={{
+                      "& svg": {
+                        width: "51px",
+                        height: "19px",
+                      },
+                    }}
+                  />
+                  <IconButton
+                    icon={<PreviousVideoIcon />}
+                    onClick={() => handleBackTenSeconds()}
+                    sx={{
+                      "& svg": {
+                        width: "36px",
+                        height: "38px",
+                      },
+                    }}
+                  />
+                  <IconButton
+                    onClick={() => handlePlayOrPause()}
+                    icon={!playVideo ? <PlayIcon /> : <PauseIcon />}
+                    sx={{
+                      "& svg": {
+                        width: "78px",
+                        height: "90px",
+                      },
+                    }}
+                  />
+                  <IconButton
+                    icon={<NextVideoIcon />}
+                    onClick={() => handleBackTenSeconds()}
+                    sx={{
+                      "& svg": {
+                        width: "36px",
+                        height: "38px",
+                      },
+                    }}
+                  />
+                  <IconButton
+                    icon={<FowardTenSeconds />}
+                    onClick={() => handleForwardTenSeconds()}
+                    sx={{
+                      "& svg": {
+                        width: "51px",
+                        height: "19px",
+                      },
+                    }}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "35px",
+                    position: "absolute",
+                    top: "0px",
+                    right: "20px",
+                    height: "100%",
+                  }}
+                >
+                  <IconButton
+                    icon={<AspectRatioIcon />}
+                    onClick={() => handleAspectRatio()}
+                    sx={{
+                      "& svg": {
+                        width: "64px",
+                        height: "52px",
+                      },
+                      marginLeft: "auto",
+                    }}
+                  />
+                  <IconButton
+                    icon={<VideoSubtitlesIcon />}
+                    onClick={() => handleAspectRatio()}
+                    sx={{
+                      "& svg": {
+                        width: "64px",
+                        height: "52px",
+                      },
+                      marginLeft: "auto",
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Box>
           )}
-        </div>
+        </Box>
       ) : (
         <p>Carregando filme</p>
       )}
@@ -349,7 +483,7 @@ const VideoPlayer: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </Box>
   );
 };
 export default VideoPlayer;
