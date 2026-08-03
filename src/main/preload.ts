@@ -32,6 +32,8 @@ contextBridge.exposeInMainWorld("movies", {
     ipcRenderer.on("on_get_subtitles", (_event, args) => {
       functionToSaveSubtitles(args);
     }),
+  getMoviesFromAfolder: (path: string) =>
+    ipcRenderer.send("get_movies_from_a_folder", path),
 });
 
 contextBridge.exposeInMainWorld("settings", {

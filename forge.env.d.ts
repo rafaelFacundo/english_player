@@ -24,6 +24,7 @@ declare global {
       onGetSubtitles: (
         functionToSaveSubtitles: (subtitlesList: Subtitle[]) => void
       ) => void;
+      getMoviesFromAfolder: (path: string) => void;
     };
     settings: {
       onGetSettingsData: (unctionToSaveData: (data: Settings) => void) => void;

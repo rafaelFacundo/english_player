@@ -18,6 +18,7 @@ import {
   getFolderId,
   getFolders,
   getMovies,
+  getMoviesFromAfolder,
   getSubtitles,
   insertNewFolder,
   insertNewMovies,
@@ -231,5 +232,19 @@ export const handleGetSubtitles = (event: IpcMainEvent) => {
     console.log("ERROR WHILE RECOVERING SUBTITLES LIST");
     console.log(error);
     event.reply("on_get_subtitles", []);
+  }
+};
+
+export const handleGetMoviesFromAFolder = async (
+  event: IpcMainEvent,
+  path: string
+) => {
+  try {
+    const result = getMoviesFromAfolder(path);
+    console.log("LKJDA ", path, result);
+    event.reply("on-get-movies", result);
+  } catch (error) {
+    console.log(error);
+    event.reply("on-get-movies", []);
   }
 };

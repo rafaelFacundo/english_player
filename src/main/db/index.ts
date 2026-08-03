@@ -5,7 +5,7 @@ import { Folder, Movie, SettingskeyValue, Subtitle } from "src/types/general";
 let dataBase: sqlite3.DatabaseSync;
 
 export const openDatabase = (): void => {
-  dataBase = new sqlite3.DatabaseSync(":memory:");
+  dataBase = new sqlite3.DatabaseSync(applicationDatabasePath);
   try {
     dataBase.exec(`
       BEGIN TRANSACTION;
@@ -224,6 +224,7 @@ export const getSettings = (): SettingskeyValue[] | undefined => {
   } catch (error) {
     console.log("ERROR WHILE TRYING TO GET SETTINGS");
     console.log(error);
+    return [];
   }
 };
 
@@ -262,5 +263,24 @@ export const updateSettingsKey = (key: string, value: string) => {
   } catch (error) {
     console.log("ERROR WHILE TRYING TO UPDATE SETTINGS");
     console.log(error);
+  }
+};
+
+export const getMoviesFromAfolder = (folderPath: string): Movie[] => {
+  try {
+    const selectQuery = dataBase.prepare(`
+      SELECT m.*
+      FROM movies m
+      JOIN folders f ON m.folder_id = f.id
+      WHERE f.path = ?;
+    `);
+    const selectQueryResult = selectQuery.all(
+      folderPath
+    ) as unknown[] as Movie[];
+    return selectQueryResult;
+  } catch (error) {
+    console.log("ERROR WHILE GETTING MOVIES FROM A FOLDER");
+    console.log(error);
+    return [];
   }
 };

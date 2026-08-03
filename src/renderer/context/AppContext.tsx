@@ -107,23 +107,24 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
         state.settingsData.movies_directory_path !== null
       ) {
         const foldersList = await window.directory.getDirectoryList();
-        const path = state.settingsData.movies_directory_path;
+        const newMoviespath = state.settingsData.movies_directory_path;
         const folderAlreadySaved = foldersList.findIndex(
-          (folder) => folder.path === state.settingsData.movies_directory_path
+          (folder) => folder.path === newMoviespath
         );
         if (folderAlreadySaved === -1) {
           const saveFolderResult =
-            await window.directory.saveNewFolderOnDB(path);
+            await window.directory.saveNewFolderOnDB(newMoviespath);
 
           const updateSettingsResult = await window.settings.saveSettingsData({
             key: "movies_directory_path",
-            value: path,
+            value: newMoviespath,
           });
           if (updateSettingsResult && saveFolderResult) {
-            window.movies.seachForMovies(
-              state.settingsData.movies_directory_path
-            );
+            window.movies.seachForMovies(newMoviespath);
           }
+        } else {
+          console.log("ALSKdalskdlasd ceara", newMoviespath);
+          window.movies.getMoviesFromAfolder(newMoviespath);
         }
       }
     };

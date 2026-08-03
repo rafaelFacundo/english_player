@@ -15,9 +15,8 @@ export const verifyInitialSettings = async () => {
       createDirSync(applicationMoviesThumbsPath);
     }
     const settingsList = getSettings();
-    if (!settingsList) {
-      console.log("THERE IS NO SETTINGS");
-    } else if (settingsList.length === 0) {
+    if (settingsList.length > 0) {
+    } else {
       insertKeySetting([
         { key: "subtitle_color", value: "FFFFe0" },
         { key: "subtitle_background_color", value: "000000" },
