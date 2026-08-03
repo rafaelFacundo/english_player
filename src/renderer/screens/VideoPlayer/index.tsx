@@ -27,7 +27,7 @@ const VideoPlayer: React.FC = () => {
   const { state } = useContext(AppContext);
   const subtitleColor = state.settingsData.subtitle_color;
   const subtitleBackground = state.settingsData.subtitle_background_color;
-  const [currentMoviePath, setCurrentMoviePath] = useState<string>("");
+  const [currentMoviePath, setCurrentMoviePath] = useState<string>("aaaaaa");
   const [playVideo, setPlayVideo] = useState<boolean>(false);
   const [currentAspectRatio, setCurrentAspectRatio] = useState<number>(0);
   const [videoDuration, setVideoDuration] = useState<number>(0);
@@ -257,6 +257,7 @@ const VideoPlayer: React.FC = () => {
                 top: "20px",
                 left: "10px",
                 cursor: "pointer",
+                zIndex: 4,
               }}
             >
               <IconButton
