@@ -25,7 +25,7 @@ export type Movie = File & {
   lastModified: Date;
   size: number;
   subtitlesPath?: string[];
-  thumbPath?: string;
+  thumb_path?: string;
 };
 
 export type Settings = {

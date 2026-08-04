@@ -106,12 +106,12 @@ const getMovieInfo = (
     lastModified: new Date(),
     size: 2,
     folderId: folderId,
-    thumbPath: "",
+    thumb_path: "",
     path: moviePath,
     type: FileType.Movie,
   };
   movie.duration = getMovieDuration(moviePath);
-  movie.thumbPath = getMovieThumb(moviePath, item.name, movie.duration);
+  movie.thumb_path = getMovieThumb(moviePath, item.name, movie.duration);
   const movieStats = getMovieStats(moviePath);
   if (movieStats) {
     movie.size = movieStats.size;

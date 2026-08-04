@@ -25,6 +25,8 @@ const VideoOption: React.FC<VideoOptionProps> = ({
   const { state, setCurrentMovie } = useContext(AppContext);
   const [showTooltip, setShowTooltip] = useState(false);
 
+  console.log("MOVIE ", movie);
+
   return (
     <Tooltip
       title={movie.title}
@@ -72,7 +74,7 @@ const VideoOption: React.FC<VideoOptionProps> = ({
           sx={{
             minWidth: "171px",
             minHeight: "239px",
-            backgroundImage: `url(image://${movie.thumbPath})`,
+            backgroundImage: `url(image://${movie.thumb_path})`,
             backgroundPosition: "center",
             borderRadius: "15px",
             "& svg": {

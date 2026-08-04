@@ -111,7 +111,7 @@ export const insertNewMovies = (movies: Movie[]) => {
         movie.lastModified.toISOString(),
         movie.size,
         movie.folderId,
-        movie.thumbPath ? movie.thumbPath : null
+        movie.thumb_path ? movie.thumb_path : null
       );
       result.push(insertResult.lastInsertRowid);
     }
