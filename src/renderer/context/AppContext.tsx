@@ -125,6 +125,7 @@ const AppProvider: React.FC<AppProviderPropsType> = ({ children }) => {
         } else {
           console.log("ALSKdalskdlasd ceara", newMoviespath);
           window.movies.getMoviesFromAfolder(newMoviespath);
+          window.movies.getSubtitles(newMoviespath);
         }
       }
     };

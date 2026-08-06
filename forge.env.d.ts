@@ -20,11 +20,12 @@ declare global {
     movies: {
       seachForMovies: (path: string) => void;
       refreshMoviesFolder: (path: string) => void;
-      getSubtitles: () => void;
+      getSubtitles: (path: string) => void;
       onGetSubtitles: (
         functionToSaveSubtitles: (subtitlesList: Subtitle[]) => void
       ) => void;
       getMoviesFromAfolder: (path: string) => void;
+      getSubtitles: () => void;
     };
     settings: {
       onGetSettingsData: (unctionToSaveData: (data: Settings) => void) => void;

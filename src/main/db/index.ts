@@ -205,10 +205,15 @@ export const getMovies = (): Movie[] | undefined => {
   }
 };
 
-export const getSubtitles = (): Subtitle[] | undefined => {
+export const getSubtitles = (path: string): Subtitle[] | undefined => {
   try {
-    const selectQuery = dataBase.prepare("SELECT * FROM subtitles;");
-    const result = selectQuery.all() as unknown[] as Subtitle[];
+    const selectQuery = dataBase.prepare(`
+        SELECT s.*
+      FROM subtitles s
+      JOIN folders f ON s.folder_id = f.id
+      WHERE f.path = ?;
+      `);
+    const result = selectQuery.all(path) as unknown[] as Subtitle[];
     return result;
   } catch (error) {
     console.log("ERROR WHILE TRYING TO GET SUBTITLES");

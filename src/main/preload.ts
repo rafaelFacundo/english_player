@@ -25,7 +25,7 @@ contextBridge.exposeInMainWorld("movies", {
   refreshMoviesFolder: (path: string) => {
     ipcRenderer.send("refreshMoviesFolder", path);
   },
-  getSubtitles: () => ipcRenderer.send("get_subtitles"),
+  getSubtitles: (path: string) => ipcRenderer.send("get_subtitles", path),
   onGetSubtitles: (
     functionToSaveSubtitles: (subtitlesList: Subtitle[]) => void
   ) =>

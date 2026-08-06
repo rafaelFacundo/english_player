@@ -174,6 +174,7 @@ export const handleSearchForMovies = async (
   });
   await insertNewMovies(movies);
   await insertNewSubtitles(subtitles);
+  console.log("asdsd", subtitles);
   event.reply("on-get-movies", movies);
   event.reply("on_get_subtitles", subtitles);
 };
@@ -224,9 +225,9 @@ export const handleGetFoldersList = (): Folder[] => {
   }
 };
 
-export const handleGetSubtitles = (event: IpcMainEvent) => {
+export const handleGetSubtitles = (event: IpcMainEvent, path: string) => {
   try {
-    const subtitles = getSubtitles();
+    const subtitles = getSubtitles(path);
     event.reply("on_get_subtitles", subtitles);
   } catch (error) {
     console.log("ERROR WHILE RECOVERING SUBTITLES LIST");
@@ -241,7 +242,7 @@ export const handleGetMoviesFromAFolder = async (
 ) => {
   try {
     const result = getMoviesFromAfolder(path);
-    console.log("LKJDA ", path, result);
+
     event.reply("on-get-movies", result);
   } catch (error) {
     console.log(error);
